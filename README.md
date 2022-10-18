@@ -1,6 +1,10 @@
 # Project1
 Enterprise Database
 
+## UI
+![UI_Flowchart](https://github.com/CMPUT2912022/Project1/blob/main/Documentation/UI_Flowchart.svg)
+
+
 ## Tables
 - users(*uid*, name, pwd)
   - PK: uid
