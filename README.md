@@ -13,20 +13,20 @@ Enterprise Database
   - PK: uid, sno, sid
   - FK: uid, sno, sid
   - NOTES:
-    - Weak entity
+    - Many-to-many relationship
 - playlists(*pid*, title, *uid*)
   - PK: pid
 - plinclude(*pid*, *sid*, sorder)
   - PK: pid, sid
   - FK: pid, sid
   - NOTES:
-    - Weak entity
+    - Many-to-many relationship
 - artists(*aid*, name, nationality, pwd)
   - PK: aid
 - perform(*aid*, *sid*)
   - PK: aid, sid
   - FK: aid, sid
   - NOTES:
-    - Weak entity
+    - Many-to-many relationship
 
 
