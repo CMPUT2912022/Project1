@@ -29,4 +29,6 @@ Enterprise Database
   - NOTES:
     - Many-to-many relationship
 
-
+## Design patterns
+- Application logic should be seperate from the interface logic (have a class solely for managing the application logic).
+- Each view should be in a seperate function/class
