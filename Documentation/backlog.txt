@@ -4,6 +4,10 @@
 
 [US.01.03] For each session, a session number unique for the user should be assigned by your system, the session start date should be set to the current date and the session end date should be set to null.
 
+[US.01.04] There should be an option to logout, directing them back to the first screen (login screen).
+
+[US.01.05] There should be an option to exit the program directly, which closes any open session.
+
 
 
 [US.02.01] Search for songs and playlists. The user should be able to provide one or more unique keywords, and the system should retrieve all songs and playlists that have any of those keywords in title. For each matching song, the id, the title and the duration, and for each matching playlist, the id, the title and the total duration of songs in the playlist should be returned. 
@@ -33,4 +37,5 @@
 [US.06.01] Artists should be able to add a song by providing a title and a duration. The system should check if the artists already has a song with the same title and duration. If not, the song should be added with a unique id (assigned by your system) and any additional artist who may have performed the song with their ids obtained from input.
 
 [US.06.02] Artists should be able to list top 3 users who listen to their songs the longest time and top 3 playlists that include the largest number of their songs. If there are less than 3 such users or playlists, fewer number of users and playlists can be returned. 
+
 
