@@ -5,6 +5,10 @@ Enterprise Database
 ![UI_Flowchart](https://github.com/CMPUT2912022/Project1/blob/main/Documentation/UI_Flowchart.svg)
 
 
+## UML
+![UML](https://github.com/CMPUT2912022/Project1/blob/main/Documentation/UML.svg)
+
+
 ## Tables
 - users(*uid*, name, pwd)
   - PK: uid
