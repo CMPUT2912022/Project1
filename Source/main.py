@@ -1,8 +1,12 @@
 from Application.application import *
+from Interface.interface import *
 
 
 def main():
-    a = Application()
+    app = Application()
+    ui = AppUI()
+
+    ui.start()
 
     return
 
