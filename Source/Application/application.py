@@ -1,29 +1,54 @@
 from typing import List
-import members
+from Application.members import *
+from Application.dataObjects import *
+import Application.members, sqlite3
+
 
 class Application:
     member: Member = None
 
+    
+    # public
+    def __init__(self):
+        self.__init_database("data.db")
+        return
 
-    def userLogin(uid: str, pwd: str) -> User:
+    def userLogin(self, uid: str, pwd: str) -> User:
         pass
-    def artistLogin(aid: str, pwd: str) -> Artist:
+    def artistLogin(self, aid: str, pwd: str) -> Artist:
         pass
-    def getSongDetails(sid: int) -> Song:
+    def getSongDetails(self, sid: int) -> Song:
         pass
-    def listenToSong(sid: int) -> None:
+    def listenToSong(self, sid: int) -> None:
         pass
-    def addSongToPlaylist(song: Song) -> None:
+    def addSongToPlaylist(self, song: Song) -> None:
         pass
-    def searchSong(search: str) -> List[Song]:
+    def searchSong(self, search: str) -> List[Song]:
         pass
-    def getPlaylistDetails(pid: int) -> Playlist:
+    def getPlaylistDetails(self, pid: int) -> Playlist:
         pass
-    def searchPlaylist(pid: int) -> List[Song]:
+    def searchPlaylist(self, pid: int) -> List[Song]:
         pass
-    def getArtistDetails(aid: str) -> Artist:
+    def getArtistDetails(self, aid: str) -> Artist:
         pass
-    def addSong(title: str, duration: int) -> None:
+    def addSong(self, title: str, duration: int) -> None:
         pass
-    def searchArtists(search: str) -> List[Artist]:
+    def searchArtists(self, search: str) -> List[Artist]:
         pass
+
+
+    # private
+    def __init_database(self, dbName):
+        with open("Application/init_tables.sql", 'r') as fo:
+            conn = sqlite3.connect(dbName)
+            csr = conn.cursor()
+            try:
+                csr.executescript(fo.read())
+                conn.commit()
+            except sqlite3.Error as e:
+                print("\nError while initializing database: \n", e)
+
+            finally:
+                conn.close()
+        return
+

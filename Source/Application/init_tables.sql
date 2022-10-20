@@ -1,5 +1,7 @@
+PRAGMA foreign_keys = ON;
+
 --users(uid, name, pwd)
-CREAT TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     uid     CHAR(25)    NOT NULL UNIQUE,
     name    CHAR(25),
     pwd     CHAR(25)    NOT NULL,
@@ -7,7 +9,7 @@ CREAT TABLE users (
 );
 
 --songs(sid, title, duration)
-CREATE TABLE songs (
+CREATE TABLE IF NOT EXISTS songs (
     sid INT,
     title TEXT,
     duration INT,
@@ -15,45 +17,48 @@ CREATE TABLE songs (
 );
 
 --sessions(uid, sno, start, end)
-CREATE TABLE sessions (
+CREATE TABLE IF NOT EXISTS sessions (
     uid CHAR(25),
     sno INT,
     start INT,
-    end INT
+    end INT,
     PRIMARY KEY (uid, sno),
-    FOREIGN KEY (uid)
+    FOREIGN KEY (uid) REFERENCES users(uid)
 );
 
 --listen(uid, sno, sid, cnt)
-CREATE TABLE listen (
+CREATE TABLE IF NOT EXISTS listen (
     uid CHAR(25),
     sno INT,
     sid INT,
     cnt INT,
     PRIMARY KEY (uid, sno, sid),
-    FOREIGN KEY (uid, sno, sid)
+    FOREIGN KEY (uid) REFERENCES users(uid),
+    FOREIGN KEY (sno) REFERENCES sessions(sno),
+    FOREIGN KEY (sid) REFERENCES songs(sid)
 );
 
 --playlists(pid, title, uid)
-CREATE TABLE playlists (
+CREATE TABLE IF NOT EXISTS playlists (
     pid INT,
     title TEXT,
     uid CHAR(25),
     PRIMARY KEY (pid, uid),
-    FOREIGN KEY (uid)
+    FOREIGN KEY (uid) REFERENCES users(uid)
 );
 
 --plinclude(pid, sid, sorder)
-CREATE TABLE plinclude (
+CREATE TABLE IF NOT EXISTS plinclude (
     pid INT,
     sid INT,
     sorder INT,
     PRIMARY KEY (pid, sid, sorder),
-    FOREIGN KEY (pid, sid)
+    FOREIGN KEY (pid) REFERENCES playlists(pid),
+    FOREIGN KEY (sid) REFERENCES songs(sid)
 );
 
 --artists(aid, name, nationality, pwd)
-CREATE TABLE artists (
+CREATE TABLE IF NOT EXISTS artists (
     aid CHAR(25),
     name TEXT,
     nationality TEXT,
@@ -62,10 +67,11 @@ CREATE TABLE artists (
 );
 
 --perform(aid, sid)
-CREATE TABLE perform (
+CREATE TABLE IF NOT EXISTS perform (
     aid CHAR(25),
     sid INT,
     PRIMARY KEY (aid, sid),
-    FOREIGN KEY (aid, sid)
+    FOREIGN KEY (aid) REFERENCES artists(aid),
+    FOREIGN KEY (sid) REFERENCES songs(sid)
 );
 
