@@ -54,12 +54,11 @@ INSERT INTO playlists (pid, title, uid) VALUES
 
 
 INSERT INTO plinclude (pid, sid, sorder) VALUES
+(1,0,0),
 (1,1,1),
 (1,2,2),
 (1,3,3),
 (1,4,4),
 (1,5,5),
-(1,6,6),
-(1,7,7),
-(2,8,8);
+(2,6,1);
 

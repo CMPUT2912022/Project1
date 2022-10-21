@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS playlists (
     pid INT,
     title TEXT,
     uid CHAR(25),
-    PRIMARY KEY (pid, uid),
+    PRIMARY KEY (pid),
     FOREIGN KEY (uid) REFERENCES users(uid)
 );
 
