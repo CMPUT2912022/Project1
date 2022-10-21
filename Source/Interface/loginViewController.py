@@ -3,8 +3,15 @@ import tkinter as tk
 from Interface.userViewController import *
 
 class LoginVC(tk.Frame):
-    def __init__(self, parent=None):
+    mid = None  # member id
+    pwd = None
+
+    def __init__(self, app, parent=None):
+        self.app = app
         self.parent = parent
+        self.mid = tk.StringVar()
+        self.pwd = tk.StringVar()
+
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.columnconfigure(0, weight=1)
@@ -12,14 +19,12 @@ class LoginVC(tk.Frame):
         self.create_view()
 
     def create_view(self):
-        mid = tk.StringVar()  # member id
-        mid_entry = tk.Entry(self, width=15, textvariable=mid)
+        mid_entry = tk.Entry(self, width=15, textvariable=self.mid)
         mid_entry.grid(column=2, row=1, sticky=(tk.W, tk.E))
         mid_entry.focus()
 
         # password entry
-        pwd = tk.StringVar()  # member id
-        pwd_entry = tk.Entry(self, width=15, textvariable=pwd, show='*')
+        pwd_entry = tk.Entry(self, width=15, textvariable=self.pwd, show='*')
         pwd_entry.grid(column=2, row=2, sticky=(tk.W, tk.E))
         pwd_entry.focus()
 
@@ -31,11 +36,18 @@ class LoginVC(tk.Frame):
             child.grid_configure(padx=5, pady=5)
 
     def login_action(self):
-        # 1. Check if login successful
+        # 1. Check if member is a user or artist
 
-        # 2. Check if member is a user or artist
+        # 2. Check if login successful
+        login_success = self.app.userLogin(self.mid.get(), self.pwd.get())
+
 
         # 3. Route accordingly
-        uvc = UserVC(self.parent)
-        #uvc.grid()
+        if login_success:
+            uvc = UserVC(self.app, self.parent)
+            #uvc.grid()
+            #self.grid_forget()
+        else:
+            # Raise error
+            pass
         pass

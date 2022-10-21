@@ -6,11 +6,11 @@ from Interface.loginViewController import *
 class AppUI:
     root = Tk()
     mainframe = ttk.Frame(root, padding="3 3 12 12")
-    def __init__(self):
+    def __init__(self, app):
         # Frame configuration
         self.root.title("Napster V2")
         self.mainframe.pack()
-        lvc = LoginVC(self.mainframe)
+        lvc = LoginVC(app, self.mainframe)
         lvc.grid()
         return
 

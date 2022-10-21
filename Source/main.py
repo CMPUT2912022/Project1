@@ -4,7 +4,7 @@ from Interface.interface import *
 
 def main():
     app = Application()
-    ui = AppUI()
+    ui = AppUI(app)
 
     ui.start()
 
