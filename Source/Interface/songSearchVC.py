@@ -1,7 +1,7 @@
 import tkinter as tk
 
 class SongSearchVC(tk.Frame):
-    def __init__(self, parent=None):
+    def __init__(self, app, parent=None):
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.columnconfigure(0, weight=1)

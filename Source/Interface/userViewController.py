@@ -1,9 +1,11 @@
 import tkinter as tk
 from Interface.songSearchVC import *
 from Interface.artistSearchVC import *
+from Interface.sessionVC import *
 
 class UserVC(tk.Frame):
-    def __init__(self, parent=None):
+    def __init__(self, app, parent=None):
+        self.app = app
         self.parent = parent
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -28,16 +30,19 @@ class UserVC(tk.Frame):
             child.grid_configure(padx=5, pady=5)
 
     def session_action(self):
-        pass
+        sessionVC = SessionVC(self.app, self.parent)
+        #sessionVC.grid()
+        #self.grid_forget()
 
     def song_search_action(self):
-        ss = SongSearchVC(self.parent)
+        ss = SongSearchVC(self.app, self.parent)
         ss.grid()
         #self.grid_forget()
 
     def artist_search_action(self):
-        artistSearch = SongSearchVC(self.parent)
+        artistSearch = SongSearchVC(self.app, self.parent)
         artistSearch.grid()
 
     def logout_action(self):
-        self.grid_forget()
+        #self.grid_forget()
+        self.destroy()
