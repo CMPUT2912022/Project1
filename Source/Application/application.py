@@ -3,7 +3,7 @@ from Application.members import *
 from Application.dataObjects import *
 import Application.members, sqlite3
 
-import time  # [US.01.01]
+import datetime  # [US.01.01]
 
 class Application:
     member: Member = None
@@ -11,32 +11,31 @@ class Application:
     dbName = "data.db"
     conn = None
     
+
     def __init__(self):
         self.__init_database("data.db")
         self.conn = sqlite3.connect(self.dbName)
         return
 
+
     def userLogin(self, uid: str, pwd: str) -> bool:  # [US.01.06]
         '''
         For logging in a user (not an artist)!
         '''
-        assert type(uid) == str, "Wrong type"
-        if self.member == None:
-            csr = self.conn.cursor() 
-            query = csr.execute("SELECT uid, name, pwd FROM users WHERE uid = ?", (uid,)).fetchone()
-            if query[2] == pwd:
-                # Password matches
-                self.member = User(uid, query[1])
-                return True
-            else:
-                # Password does not match
-                return False
-        else:
+        if self.member != None:
             # Log current member out
             # End all of member's sessions
+            # TODO
             pass
-        
-        return
+        csr = self.conn.cursor() 
+        query = csr.execute("SELECT uid, name, pwd FROM users WHERE uid = ?", (uid,)).fetchone()
+        success = False
+        if query != None and query[2] == pwd:
+            # Password matches
+            self.member = User(uid, query[1])
+            success = True
+        return success
+
 
     def artistLogin(self, aid: str, pwd: str) -> Artist:
         '''
@@ -44,12 +43,15 @@ class Application:
         '''
         pass
 
+
     def startSession(self):  # [US.01.01]
         # Restrictions: Member must be logged in.
         if self.member != None:
-            with conn.cursor() as csr:
-                sno = csr.execute("SELECT MAX(sno) FROM sessions").fetchone()[0] + 1
-                csr.execute("INSERT INTO sessions (uid, sno, start, end) VALUES (?,?,?,?)", self.member.id, sno, Date.date(), None)
+            csr = self.conn.cursor()
+            max_sno = csr.execute("SELECT MAX(sno) FROM sessions").fetchone()[0]
+            sno = max_sno + 1 if max_sno != None else 0
+            csr.execute("INSERT INTO sessions (uid, sno, start, end) VALUES (?,?,?,?)", (self.member.mid, sno, datetime.datetime.now(), None))
+            self.conn.commit()
         return
             
 
