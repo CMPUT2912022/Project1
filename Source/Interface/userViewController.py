@@ -1,7 +1,10 @@
 import tkinter as tk
+from Interface.songSearchVC import *
+from Interface.artistSearchVC import *
 
 class UserVC(tk.Frame):
     def __init__(self, parent=None):
+        self.parent = parent
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.columnconfigure(0, weight=1)
@@ -28,10 +31,13 @@ class UserVC(tk.Frame):
         pass
 
     def song_search_action(self):
-        pass
+        ss = SongSearchVC(self.parent)
+        ss.grid()
+        #self.grid_forget()
 
     def artist_search_action(self):
-        pass
+        artistSearch = SongSearchVC(self.parent)
+        artistSearch.grid()
 
     def logout_action(self):
         self.grid_forget()

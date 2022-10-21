@@ -8,7 +8,7 @@ class AppUI:
     mainframe = ttk.Frame(root, padding="3 3 12 12")
     def __init__(self):
         # Frame configuration
-        self.root.title("Main")
+        self.root.title("Napster V2")
         self.mainframe.pack()
         lvc = LoginVC(self.mainframe)
         lvc.grid()
