@@ -4,6 +4,7 @@ from Interface.artistSearchVC import *
 
 class SessionVC(tk.Frame):  # [US.01.01]
     def __init__(self, app, parent=None):
+        self.app = app
         self.parent = parent
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
