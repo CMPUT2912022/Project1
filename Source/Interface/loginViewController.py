@@ -24,18 +24,18 @@ class LoginVC(tk.Frame):
         mid_entry.focus()
 
         # password entry
-        pwd_entry = tk.Entry(self, width=15, textvariable=self.pwd, show='*')
-        pwd_entry.grid(column=2, row=2, sticky=(tk.W, tk.E))
-        pwd_entry.focus()
+        #pwd_entry = tk.Entry(self, width=15, textvariable=self.pwd, show='*')
+        #pwd_entry.grid(column=2, row=2, sticky=(tk.W, tk.E))
+        #pwd_entry.focus()
 
         # login button
-        login_button = tk.Button(self, text='Login', command=self.login_action)
-        login_button.grid(column=2, row=3)
+        next_button = tk.Button(self, text='Next', command=self.next_action)
+        next_button.grid(column=2, row=3)
         
         for child in self.winfo_children(): 
             child.grid_configure(padx=5, pady=5)
 
-    def login_action(self):
+    def next_action(self):
         # 1. Check if member is a user or artist
 
         # 2. Check if login successful
@@ -50,4 +50,4 @@ class LoginVC(tk.Frame):
         else:
             # Raise error
             pass
-        pass
+
