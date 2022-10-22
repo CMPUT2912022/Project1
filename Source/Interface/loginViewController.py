@@ -36,10 +36,28 @@ class LoginVC(tk.Frame):
             child.grid_configure(padx=5, pady=5)
 
     def login_action(self):
+        mid = self.mid.get()
+        pwd = self.pwd.get()
+
         # 1. Check if member is a user or artist
+        isUser = self.app.memberIsUser(mid)
+        isArtist = self.app.memberIsArtist(mid)
+        print("Is User:", isUser, "\nIs Artist:", isArtist)
+
+        if isUser and isArtist:
+            # Give member the choice on who to login as.
+            pass
+
+        elif isUser:
+            login_success = self.app.userLogin(mid, pwd)
+
+        elif isArtist:
+            login_success = self.app.artistLogin(mid, pwd)
+
+
+
 
         # 2. Check if login successful
-        login_success = self.app.userLogin(self.mid.get(), self.pwd.get())
 
 
         # 3. Route accordingly

@@ -18,6 +18,18 @@ class Application:
         return
 
 
+    def memberIsUser(self, mid: str) -> bool:
+        csr = self.conn.cursor()
+        query = csr.execute("SELECT * FROM users WHERE uid = ?", (mid,)).fetchone()
+        return True if query != None else False
+
+
+    def memberIsArtist(self, mid: str) -> bool:
+        csr = self.conn.cursor()
+        query = csr.execute("SELECT * FROM artists WHERE aid = ?", (mid,)).fetchone()
+        return True if query != None else False
+
+
     def userLogin(self, uid: str, pwd: str) -> bool:  # [US.01.06]
         '''
         For logging in a user (not an artist)!
