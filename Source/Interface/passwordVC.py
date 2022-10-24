@@ -1,5 +1,6 @@
 import tkinter as tk
 from Interface.userViewController import *
+from Interface.artistVC import *
 
 
 class PasswordVC(tk.Frame):
@@ -53,7 +54,10 @@ class PasswordVC(tk.Frame):
 
         elif self.isArtist:
             login_success = self.app.artistLogin(mid, pwd)
-            # TODO: Complete artist view and transfer
+            if login_success:
+                avc = ArtistVC(self.app, self.parent)
+            else:
+                print("Artist failed to log in")
 
         else: 
             assert False

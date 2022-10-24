@@ -53,7 +53,19 @@ class Application:
         '''
         For logging in an artist.
         '''
-        pass
+        if self.member != None:
+            # Log current member out
+            # End all of member's sessions
+            # TODO
+            pass
+        csr = self.conn.cursor() 
+        query = csr.execute("SELECT aid, name, pwd FROM artists WHERE aid = ?", (aid,)).fetchone()
+        success = False
+        if query != None and query[2] == pwd:
+            # Password matches
+            self.member = Artist(aid, query[1])
+            success = True
+        return success
 
 
     def startSession(self):  # [US.01.01]
