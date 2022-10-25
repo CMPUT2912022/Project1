@@ -74,13 +74,24 @@ class Application:
             csr = self.conn.cursor()
             max_sno = csr.execute("SELECT MAX(sno) FROM sessions").fetchone()[0]
             sno = max_sno + 1 if max_sno != None else 0
-            csr.execute("INSERT INTO sessions (uid, sno, start, end) VALUES (?,?,?,?)", (self.member.mid, sno, datetime.datetime.now(), None))
+            csr.execute("INSERT INTO sessions (uid, sno, start, end) VALUES (?,?,?,NULL)", (self.member.mid, sno, datetime.datetime.now()))
             self.conn.commit()
         return
             
 
     def endSession(self):
-        pass
+        # Restrictions: Member must be logged in.
+        if self.member != None:
+            csr = self.conn.cursor()
+            csr.execute("""
+            UPDATE sessions
+            SET end = ?
+            WHERE 
+            uid = ? AND end IS NULL;
+                        """, (datetime.datetime.now(), self.member.mid))
+            #IN (SELECT s1.sno FROM sessions s1 WHERE s1.end = Null and s1.uid = ?)
+            self.conn.commit()
+        return
 
     def getSongDetails(self, sid: int) -> Song:
         pass

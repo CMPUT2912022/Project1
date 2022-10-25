@@ -33,6 +33,6 @@ class SessionVC(tk.Frame):  # [US.01.01]
         pass
 
     def back_action(self):
-        #self.grid_forget()
-        self.destroy()
+        self.grid_forget()
+        #self.destroy()
         #self.update_view()
