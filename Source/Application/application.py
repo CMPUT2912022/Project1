@@ -97,10 +97,46 @@ class Application:
         pass
     def listenToSong(self, sid: int) -> None:
         pass
+
     def addSongToPlaylist(self, song: Song) -> None:
-        pass
-    def searchSong(self, search: str) -> List[Song]:
-        pass
+        csr=self.conn.cursor()
+        csr.execute("""
+        INSERT INTO plinclude (sid)
+        VALUES (sid)""")
+
+
+    def searchSongAndPlaylists(self, terms: List[str]) -> List[MusicData]:
+        data : List[MusicData]
+        csr = self.conn.cursor()
+        user_input=raw_input("Enter a song:") 
+        #Song Query
+        csr.execute(""" 
+        SELECT *
+        FROM songs 
+        WHERE 
+        title LIKE %?;
+            """, (user_input,)) 
+
+        #Playlist Query
+        csr.execute("""
+        SELECT p1.pid, p1.title, SUM(p3.duration)
+        FROM playlists p1, plinclude p2, songs p3
+        WHERE 
+        title LIKE %?
+        AND 
+        p1.pid = p2.pid
+        AND 
+        p2.sid = p3.sid;
+            """, (user_input,))
+        self.conn.commit()
+        return data
+	
+	
+
+
+
+
+
     def getPlaylistDetails(self, pid: int) -> Playlist:
         pass
     def searchPlaylist(self, pid: int) -> List[Song]:
