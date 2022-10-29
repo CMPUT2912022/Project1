@@ -98,7 +98,7 @@ class Application:
     def listenToSong(self, sid: int) -> None:
         pass
 
-    def addSongToPlaylist(self, song: Song) -> None:
+    def addSongToPlaylist(self, pid: int, song: Song) -> None:
         csr=self.conn.cursor()
         csr.execute("""
         INSERT INTO plinclude (sid)
