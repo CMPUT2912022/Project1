@@ -17,7 +17,7 @@ class UserVC(tk.Frame):
         session_button = tk.Button(self, text='Session Manager', command=self.session_action)
         session_button.grid(column=1, row=1)
 
-        song_search_button = tk.Button(self, text='Search Songs', command=self.song_search_action)
+        song_search_button = tk.Button(self, text='Search Songs & Playlists', command=self.song_search_action)
         song_search_button.grid(column=2, row=1)
 
         artist_search_button = tk.Button(self, text='Search Artists', command=self.artist_search_action)
