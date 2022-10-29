@@ -69,7 +69,9 @@ class Application:
 
 
     def startSession(self):  # [US.01.01]
-        # Restrictions: Member must be logged in.
+        # Restrictions: Member must be logged in, and only one session can be open at a time.
+        self.endSession()  # Close all sessions that were previously open.
+
         if self.member != None:
             csr = self.conn.cursor()
             max_sno = csr.execute("SELECT MAX(sno) FROM sessions").fetchone()[0]
@@ -89,7 +91,6 @@ class Application:
             WHERE 
             uid = ? AND end IS NULL;
                         """, (datetime.datetime.now(), self.member.mid))
-            #IN (SELECT s1.sno FROM sessions s1 WHERE s1.end = Null and s1.uid = ?)
             self.conn.commit()
         return
 
