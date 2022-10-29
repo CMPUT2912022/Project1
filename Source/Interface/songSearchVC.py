@@ -40,9 +40,9 @@ class SongSearchVC(tk.Frame):
         terms = [t.strip() for t in self.search.get().split(',')]
         print(terms)
 
-        data = [(1,Song(4, "Luckenbach Texas", 69)), (2, Song(88, "Allah's Plan", 420)), (3, Playlist(4, "My Cool Playlist", 69420))]
+        #data = [(1,Song(4, "Luckenbach Texas", 69)), (2, Song(88, "Allah's Plan", 420)), (3, Playlist(4, "My Cool Playlist", 69420))]  # Test data
 
-        #data = self.app.searchSongAndPlaylists(terms)
+        data = self.app.searchSongAndPlaylists(terms)
         for i in range(len(data)):
             d = data[i]
             md = d[1]  # MusicData
