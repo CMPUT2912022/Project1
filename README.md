@@ -3,7 +3,7 @@ Enterprise Database
 
 ## Running
 ```bash
-# From .
+# From project root
 cd Source
 python3 main.py
 ```
