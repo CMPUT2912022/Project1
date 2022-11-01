@@ -5,7 +5,7 @@ from Interface.memberChoiceVC import *
 from Interface.artistVC import *
 
 
-class createAccountVC(tk.Frame):
+class CreateAccountVC(tk.Frame):
     mid = None  # member id
 
     def __init__(self, app, parent=None):
@@ -89,13 +89,20 @@ class createAccountVC(tk.Frame):
         isUser = self.app.memberIsUser(mid)
         isArtist = self.app.memberIsArtist(mid)
 
+
         if isUser or isArtist:
             self.error_label.config(text="Invalid UID! Please chose a different one.")
         else:
             #HERE WE PUT CODE TO ENTER THE NEW INFO IN TO OUR DATABASE.
-            self.error_label.config(text="")
-            self.wipe_frame()
-            uvc = UserVC(self.app, self.parent)
+            if self.app.registerUser(mid, name, pwd):
+                self.error_label.config(text="")
+                self.wipe_frame()
+                uvc = UserVC(self.app, self.parent)
+                self.destroy()  # Goes back to login view (relevant only if a user logs out)
+            else:
+                # Failed to register user
+                self.error_label.config(text="Failed to register user.")
+
 
 
 

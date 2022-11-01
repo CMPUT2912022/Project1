@@ -29,6 +29,23 @@ class Application:
         query = csr.execute("SELECT * FROM artists WHERE aid = ?", (mid,)).fetchone()
         return True if query != None else False
 
+    
+    def registerUser(self, uid: str, name: str, pwd: str) -> bool:
+        '''
+        Registers a user, also logs them in. Can be assumed self.member will be set
+        after successfully calling this function.
+        Returns bool indicating whether registration was successful.
+        '''
+        if self.memberIsUser(uid) or self.memberIsArtist(uid) or uid == "" or name == "" or pwd == "":
+            return False
+        else:
+            csr = self.conn.cursor() 
+            query = csr.execute("INSERT INTO users VALUES (?, ?, ?);", (uid, name, pwd))
+            self.conn.commit()
+            self.member = User(uid, name)
+            return True
+        
+
 
     def userLogin(self, uid: str, pwd: str) -> bool:  # [US.01.06]
         '''

@@ -89,7 +89,6 @@ class LoginVC(tk.Frame):
         
         print("Is User:", isUser, "\nIs Artist:", isArtist)
         
-        #REMEMBER TO REMOVE THE TRUES THAT ARE HERE FOR TESTING
         if isUser and isArtist:
             login_success_user = self.app.userLogin(mid, pwd)
             login_success_artist = self.app.artistLogin(mid, pwd)
@@ -135,7 +134,7 @@ class LoginVC(tk.Frame):
 
 
     def create_account(self):
-        cavc = createAccountVC(self.app, self.parent)
+        cavc = CreateAccountVC(self.app, self.parent)
 
     
     def handle_member_choice(self, user: bool):
