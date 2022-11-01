@@ -5,7 +5,7 @@ from Interface.loginViewController import *
 
 class AppUI:
     root = Tk()
-    root.resizable(False,False)
+    #root.geometry("320x180")
     mainframe = ttk.Frame(root, padding="6 6 6 6")
     def __init__(self, app):
         # Frame configuration
