@@ -28,15 +28,18 @@ class PasswordVC(tk.Frame):
     def create_view(self):
         #user_button = tk.Button(self, text='Next', command=self.next_action)
         #artist_button.grid(column=2, row=3)
-
+        # label
+        desc_label = tk.Label(self, text= "password")
+        desc_label.grid(column=0, row=0)
+        
         # password entry
         pwd_entry = tk.Entry(self, width=15, textvariable=self.pwd, show='*')
-        pwd_entry.grid(column=0, row=0, columnspan=3, sticky=(tk.W, tk.E))
+        pwd_entry.grid(column=0, row=1, sticky=(tk.W, tk.E))
         pwd_entry.focus()
 
         # login button
         next_button = tk.Button(self, text='Login', command=self.login_action)
-        next_button.grid(column=3, row=1)
+        next_button.grid(column=0, row=2)
         
         for child in self.winfo_children(): 
             child.grid_configure(padx=5, pady=5)
@@ -46,14 +49,16 @@ class PasswordVC(tk.Frame):
         mid = self.mid
         pwd = self.pwd.get()
 
-
+        #REMEMBER TO REMOVE THE TRUES THAT ARE HERE FOR TESTING
         if self.isUser:
             login_success = self.app.userLogin(mid, pwd)
+            login_success = True
             if login_success:
                 uvc = UserVC(self.app, self.parent)
 
         elif self.isArtist:
             login_success = self.app.artistLogin(mid, pwd)
+            login_success = True
             if login_success:
                 avc = ArtistVC(self.app, self.parent)
             else:
