@@ -145,8 +145,8 @@ class LoginVC(tk.Frame):
         '''
         mid = self.mid.get()
         if user:
-            PasswordVC(mid=mid, isArtist=False, isUser=True, app=self.app, parent=self.parent)
+            UserVC(self.app, self.parent)
 
         else:
-            PasswordVC(mid=mid, isArtist=True, isUser=False, app=self.app, parent=self.parent)
+            ArtistVC(self.app, self.parent)
 
