@@ -14,8 +14,6 @@ class LoginVC(tk.Frame):
         self.parent = parent
         self.mid = tk.StringVar()
         self.pwd = tk.StringVar()
-        self.isArtist = False
-        self.isUser = False
         
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -51,7 +49,7 @@ class LoginVC(tk.Frame):
         next_button.grid(column=0, row=3,columnspan=2)
 
         # create account button
-        next_button = tk.Button(self, text='Create Account', command=self.create_account)
+        next_button = tk.Button(self, text='Create Account', command=self.create_account_handler)
         next_button.grid(column=0, row=5,columnspan=2)
         
         for child in self.winfo_children(): 
@@ -75,67 +73,32 @@ class LoginVC(tk.Frame):
     def login_action(self):
         mid = self.mid.get()
         pwd = self.pwd.get()
-        # 1. Check if member is a user or artist
-        isUser = self.app.memberIsUser(mid)
-        isArtist = self.app.memberIsArtist(mid)
-        
-        if mid == "test":
-            isUser = True
-            isArtist = True
-        
-        self.isUser = isUser
-        self.isArtist = isArtist
-        
-        
-        print("Is User:", isUser, "\nIs Artist:", isArtist)
-        
-        #REMEMBER TO REMOVE THE TRUES THAT ARE HERE FOR TESTING
-        if isUser and isArtist:
-            login_success_user = self.app.userLogin(mid, pwd)
-            login_success_artist = self.app.artistLogin(mid, pwd)
-            if login_success_user and login_success_artist: 
-                # Give member the choice on who to login as.
-                self.error_label.config(text = "")
-                self.wipe_frame()
-                MemberChoiceVC(self.handle_member_choice, self.app, self.parent)
-            elif login_success_user:
-                self.error_label.config(text = "")
-                self.wipe_frame()
-                uvc = UserVC(self.app, self.parent)
-            elif login_success_artist:
-                self.error_label.config(text = "")
-                self.wipe_frame()
-                avc = ArtistVC(self.app, self.parent)
-            else:
-                # error label
-                self.error_label.config(text = "The information you've entered is incorrect.")
-            
-        elif self.isUser:
-            login_success = self.app.userLogin(mid, pwd)
-            if login_success:
-                self.error_label.config(text = "")
-                self.wipe_frame()
-                uvc = UserVC(self.app, self.parent)
-            else:
-                # error label
-                self.error_label.config(text = "The information you've entered is incorrect.")
 
-        elif self.isArtist:
-            login_success = self.app.artistLogin(mid, pwd)
-            if login_success:
-                self.error_label.config(text = "")
-                self.wipe_frame()
-                avc = ArtistVC(self.app, self.parent)
-            else:
-                # error label
-                self.error_label.config(text = "The information you've entered is incorrect.")
+        login_success_user = self.app.testUserCredentials(mid, pwd)
+        login_success_artist = self.app.testArtistCredentials(mid, pwd)
+        
+        if login_success_user and login_success_artist: 
+            # Give member the choice on who to login as.
+            # Wipe fields in completion handler
+            MemberChoiceVC(self.handle_member_choice, self.app, self.parent)
+
+        elif login_success_user:
+            self.error_label.config(text = "")
+            self.wipe_frame()
+            UserVC(self.app, self.parent)
+
+        elif login_success_artist:
+            self.error_label.config(text = "")
+            self.wipe_frame()
+            ArtistVC(self.app, self.parent)
+
         else:
             # error label
             self.error_label.config(text = "The information you've entered is incorrect.")
+            
 
-
-    def create_account(self):
-        cavc = createAccountVC(self.app, self.parent)
+    def create_account_handler(self):
+        CreateAccountVC(self.app, self.parent)
 
     
     def handle_member_choice(self, user: bool):
@@ -144,9 +107,16 @@ class LoginVC(tk.Frame):
         If user = True, will get password for user; if False, will get password for artist.
         '''
         mid = self.mid.get()
+        pwd = self.pwd.get()
         if user:
-            PasswordVC(mid=mid, isArtist=False, isUser=True, app=self.app, parent=self.parent)
+            self.app.userLogin(mid, pwd)
+            UserVC(self.app, self.parent)
 
         else:
-            PasswordVC(mid=mid, isArtist=True, isUser=False, app=self.app, parent=self.parent)
+            self.app.artistLogin(mid, pwd)
+            ArtistVC(self.app, self.parent)
+
+        self.error_label.config(text = "")
+        self.wipe_frame()
+        return
 

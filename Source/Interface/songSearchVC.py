@@ -32,6 +32,7 @@ class SongSearchVC(tk.Frame):
         self.searchView.heading('Duration', text='Duration')
         self.searchView.heading('Type', text='Type')
         self.searchView['show'] = 'headings'  # Remove empty first column
+
         self.searchView.grid(column=0, row=0, columnspan=5)
 
         self.searchView.bind("<<TreeviewSelect>>", self.openSelectedItem)
@@ -50,6 +51,9 @@ class SongSearchVC(tk.Frame):
         
         back_button = tk.Button(self, text='Back', command=self.back_action)
         back_button.grid(column=4, row=1)
+
+        back_button = tk.Button(self, text='back', command=self.back_action)
+        back_button.grid(column=3, row=1)
 
         for child in self.winfo_children(): 
             child.grid_configure(padx=5, pady=5)
@@ -101,14 +105,14 @@ class SongSearchVC(tk.Frame):
 
         print(terms)
 
-        data = [(1,Song(1, "Luckenbach Texas", 69)),
-                (2, Song(2, "Allah's Plan", 420)),
-                (3, Playlist(3, "My Cool Playlist", 69420)),
-                (4,Song(4, "Luckenbach Texas", 69)),
-                (5, Song(5, "Allah's Plan", 420)),
-                (6, Playlist(6, "My Cool Playlist", 69420))]  # Test data
+        #data = [(1,Song(1, "Luckenbach Texas", 69)),
+                #(2, Song(2, "Allah's Plan", 420)),
+                #(3, Playlist(3, "My Cool Playlist", 69420)),
+                #(4,Song(4, "Luckenbach Texas", 69)),
+               # (5, Song(5, "Allah's Plan", 420)),
+               # (6, Playlist(6, "My Cool Playlist", 69420))]  # Test data
 
-        #data = self.app.searchSongAndPlaylists(terms)
+        data = self.app.searchSongAndPlaylists(terms)
 
 
         self.max_index = trunc(len(data)/self.limit)
@@ -121,5 +125,6 @@ class SongSearchVC(tk.Frame):
             self.searchView.insert("",'end',iid=i, values=(md.ID, md.title, md.duration, md.__class__.__name__))
         print(data)
 
-    def logout_action(self):
+
+    def back_action(self):
         self.grid_forget()
