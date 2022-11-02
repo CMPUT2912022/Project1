@@ -29,7 +29,7 @@ class Application:
         query = csr.execute("SELECT * FROM artists WHERE aid = ?", (mid,)).fetchone()
         return True if query != None else False
 
-    
+
     def registerUser(self, uid: str, name: str, pwd: str) -> bool:
         '''
         Registers a user, also logs them in. Can be assumed self.member will be set
@@ -46,6 +46,19 @@ class Application:
             return True
         
 
+    def testUserCredentials(self, uid: str, pwd: str):  # [US.01.06]
+        '''
+        For testing a user's login credentials (without actually logging them in)
+        returns None if failed, otherwise returns User
+        '''
+        csr = self.conn.cursor() 
+        query = csr.execute("SELECT uid, name, pwd FROM users WHERE uid = ?", (uid,)).fetchone()
+        success = None
+        if query != None and query[2] == pwd:
+            # Password matches
+            success = User(uid, query[1])
+        return success
+
 
     def userLogin(self, uid: str, pwd: str) -> bool:  # [US.01.06]
         '''
@@ -53,19 +66,45 @@ class Application:
         '''
         if self.member != None:
             # Log current member out
-            # End all of member's sessions
-            # TODO
-            pass
-        csr = self.conn.cursor() 
-        query = csr.execute("SELECT uid, name, pwd FROM users WHERE uid = ?", (uid,)).fetchone()
+            self.logout()
+        credentialTest = self.testUserCredentials(uid, pwd)
         success = False
+        if credentialTest != None:
+            # Password matches
+            self.member = credentialTest
+            success = True
+        return success
+    
+
+    def testArtistCredentials(self, aid: str, pwd: str):  # [US.01.06]
+        '''
+        For testing an artist's login credentials (without actually logging them in)
+        returns None if failed, otherwise returns Artist 
+        '''
+        csr = self.conn.cursor() 
+        query = csr.execute("SELECT aid, name, pwd FROM artists WHERE aid = ?", (aid,)).fetchone()
+        success = None
         if query != None and query[2] == pwd:
             # Password matches
-            self.member = User(uid, query[1])
+            success = Artist(aid, query[1])  # TODO: Get nationality too
+        return success
+
+
+    def artistLogin(self, aid: str, pwd: str) -> bool:
+        '''
+        For logging in an artist.
+        '''
+        if self.member != None:
+            self.logout()
+        credentialTest = self.testArtistCredentials(adi, pwd)
+        success = False
+        if credentialTest != None:
+            # Password matches
+            self.member = credentialTest
             success = True
         return success
 
-    
+
     def logout(self):
         '''
         Handles logging out members (artist and user)
@@ -78,25 +117,6 @@ class Application:
             # Handle artist logout
             self.member = None
         return
-
-
-    def artistLogin(self, aid: str, pwd: str) -> Artist:
-        '''
-        For logging in an artist.
-        '''
-        if self.member != None:
-            # Log current member out
-            # End all of member's sessions
-            # TODO
-            pass
-        csr = self.conn.cursor() 
-        query = csr.execute("SELECT aid, name, pwd FROM artists WHERE aid = ?", (aid,)).fetchone()
-        success = False
-        if query != None and query[2] == pwd:
-            # Password matches
-            self.member = Artist(aid, query[1])
-            success = True
-        return success
 
 
     def startSession(self):  # [US.01.01]

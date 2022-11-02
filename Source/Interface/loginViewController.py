@@ -85,13 +85,16 @@ class LoginVC(tk.Frame):
         
         self.isUser = isUser
         self.isArtist = isArtist
+        login_success_user = self.app.testUserCredentials(mid, pwd)
+        login_success_artist = self.app.testArtistCredentials(mid, pwd)
         
         
         print("Is User:", isUser, "\nIs Artist:", isArtist)
         
         if isUser and isArtist:
-            login_success_user = self.app.userLogin(mid, pwd)
-            login_success_artist = self.app.artistLogin(mid, pwd)
+            login_success_user = self.app.testUserCredentials(mid, pwd)
+            login_success_artist = self.app.testArtistCredentials(mid, pwd)
+
             if login_success_user and login_success_artist: 
                 # Give member the choice on who to login as.
                 self.error_label.config(text = "")
@@ -144,8 +147,10 @@ class LoginVC(tk.Frame):
         '''
         mid = self.mid.get()
         if user:
+            self.app.userLogin(mid, pwd)
             UserVC(self.app, self.parent)
 
         else:
+            self.app.artistLogin(mid, pwd)
             ArtistVC(self.app, self.parent)
 
