@@ -156,6 +156,7 @@ class Application:
         WHERE 
         s.sid = ?;
         """, (sid, sid))
+        #TODO: Return song
 	
 
 
@@ -175,14 +176,19 @@ class Application:
     def searchSongAndPlaylists(self, terms: List[str]) -> List[MusicData]:
         data : List[MusicData]
         csr = self.conn.cursor()
-        user_input=raw_input("Enter a song:") 
-        #Song Query
-        csr.execute(""" 
-        SELECT *
-        FROM songs 
-        WHERE 
-        title LIKE %?;
-            """, (user_input,)) 
+        for t in terms:
+            #Song Query
+            results = csr.execute(""" 
+            SELECT *
+            FROM songs 
+            WHERE 
+            title LIKE %?;
+                """, (t,)).fetchall()
+
+            for row in results:
+                data.append(Song())
+
+
 
         #Playlist Query
         csr.execute("""
