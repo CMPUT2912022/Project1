@@ -45,4 +45,5 @@ class UserVC(tk.Frame):
 
     def logout_action(self):
         #self.grid_forget()
+        self.app.logout()
         self.destroy()

@@ -65,6 +65,20 @@ class Application:
             success = True
         return success
 
+    
+    def logout(self):
+        '''
+        Handles logging out members (artist and user)
+        '''
+        if isinstance(self.member, User):
+            # Handle user logout
+            self.endSession()
+            self.member = None
+        elif isinstance(self.member, Artist):
+            # Handle artist logout
+            self.member = None
+        return
+
 
     def artistLogin(self, aid: str, pwd: str) -> Artist:
         '''
