@@ -217,6 +217,43 @@ class Application:
     def searchPlaylist(self, pid: int) -> List[Song]:
         pass
 
+    def getArtistDetails(self, aid: str) -> Artist:
+        pass
+
+    def addSong(self, title: str, duration: int, artists: List[str]) -> Song:
+        '''
+        addSong function lets artists add new songs to db. 
+        returns None if song is already in db otherwise returns Song
+        ''' 
+        csr = conn.cursor()
+        max_sid = csr.execute("SELECT MAX(sid) FROM songs").fetchone()[0]
+        query = csr.execute(""" 
+        SELECT * 
+        FROM songs s 
+        WHERE 
+        s.title = ?
+        AND 
+        s.duration = ?;
+        """, (title,duration))
+        
+        if query == None: 
+            csr.execute(""" 
+            INSERT INTO songs  
+            VALUES (?,?,?);
+            """, (max_sid+1, title, duration))        
+            
+            for i in artists: 
+                csr.execute(""" 
+                INSERT INTO perform (aid) 
+                VALUES (?,?);
+                """, (artists[i], max_sid+1))
+
+            return Song(max_sid+1, title, duration)
+        else:
+            return None 
+        
+
+
 
     def getArtistStats(self, aid: str) -> ArtistStats:  # [US.06.02]
         '''
@@ -253,6 +290,7 @@ class Application:
 
     def addSong(self, title: str, duration: int) -> None:
         pass
+
     def searchArtists(self, search: str) -> List[Artist]:
         pass
 
