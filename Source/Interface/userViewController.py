@@ -4,9 +4,10 @@ from Interface.artistSearchVC import *
 from Interface.sessionVC import *
 
 class UserVC(tk.Frame):
-    def __init__(self, app, parent=None):
+    def __init__(self, app, parent=None, root = None):
         self.app = app
         self.parent = parent
+        self.root = root
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.columnconfigure(0, weight=1)
@@ -36,17 +37,17 @@ class UserVC(tk.Frame):
     def exitpg(self):
         exit(0)
     def session_action(self):
-        sessionVC = SessionVC(self.app, self.parent)
+        sessionVC = SessionVC(self.app, self.parent, self.root)
         #sessionVC.grid()
         #self.grid_forget()
 
     def song_search_action(self):
-        ss = SongSearchVC(self.app, self.parent)
+        ss = SongSearchVC(self.app, self.parent, self.root)
         ss.grid()
         #self.grid_forget()
 
     def artist_search_action(self):
-        artistSearch = SongSearchVC(self.app, self.parent)
+        artistSearch = SongSearchVC(self.app, self.parent, self.root)
         artistSearch.grid()
 
     def logout_action(self):

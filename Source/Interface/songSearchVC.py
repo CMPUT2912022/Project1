@@ -7,10 +7,10 @@ from Interface.playlistVC import *
 from Interface.songVC import *
 
 class SongSearchVC(tk.Frame):
-    def __init__(self, app, parent=None):
+    def __init__(self, app, parent=None, root = None):
         self.app = app
         self.parent = parent
-
+        self.root = root
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.columnconfigure(0, weight=1)
@@ -85,9 +85,9 @@ class SongSearchVC(tk.Frame):
         itemType = self.searchView.item(selectedItem)['values'][3]
         itemID = self.searchView.item(selectedItem)['values'][0]
         if itemType == "Song":
-            svc = songVC(self.app, self.parent, itemID)
+            svc = songVC(self.app, self.parent,self.root, itemID)
         elif itemType == "Playlist":
-            pvc = playlistVC(self.app, self.parent, itemID)
+            pvc = playlistVC(self.app, self.parent,self.root, itemID)
 
 
 
@@ -125,5 +125,3 @@ class SongSearchVC(tk.Frame):
         print(data)
 
 
-    def back_action(self):
-        self.grid_forget()

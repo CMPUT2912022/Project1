@@ -2,7 +2,7 @@ import tkinter as tk
 
 
 class ArtistVC(tk.Frame):
-    def __init__(self, app, parent=None):
+    def __init__(self, app, parent=None, root = None):
         self.app = app
         self.parent = parent
         tk.Frame.__init__(self, parent)

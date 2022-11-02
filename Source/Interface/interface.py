@@ -11,7 +11,7 @@ class AppUI:
         # Frame configuration
         self.root.title("Napster V2")
         self.mainframe.pack()
-        lvc = LoginVC(app, self.mainframe)
+        lvc = LoginVC(app, self.mainframe, self.root)
         lvc.grid()
         return
 

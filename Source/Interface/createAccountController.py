@@ -8,7 +8,7 @@ from Interface.artistVC import *
 class CreateAccountVC(tk.Frame):
     mid = None  # member id
 
-    def __init__(self, app, parent=None):
+    def __init__(self, app, parent=None, root = None):
         self.app = app
         self.parent = parent
         self.mid = tk.StringVar()
@@ -97,7 +97,7 @@ class CreateAccountVC(tk.Frame):
             if self.app.registerUser(mid, name, pwd):
                 self.error_label.config(text="")
                 self.wipe_frame()
-                uvc = UserVC(self.app, self.parent)
+                uvc = UserVC(self.app, self.parent, root)
                 self.destroy()  # Goes back to login view (relevant only if a user logs out)
             else:
                 # Failed to register user
