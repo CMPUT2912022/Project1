@@ -168,8 +168,9 @@ class Application:
         csr=self.conn.cursor()
         csr.execute("""
         INSERT INTO plinclude (sid)
-        VALUES (sid)""")
-
+        VALUES (sid)
+        WHERE pid=?""",(pid))
+        
 
     def searchSongAndPlaylists(self, terms: List[str]) -> List[MusicData]:
         data : List[MusicData]
@@ -208,8 +209,40 @@ class Application:
         pass
     def getArtistDetails(self, aid: str) -> Artist:
         pass
-    def addSong(self, title: str, duration: int) -> None:
-        pass
+
+    def addSong(self, title: str, duration: int, artists: List[str]) -> Song:
+        '''
+        addSong function lets artists add new songs to db. 
+        returns None if song is already in db otherwise returns Song
+        ''' 
+        csr = conn.cursor()
+        max_sid = csr.execute("SELECT MAX(sid) FROM songs").fetchone()[0]
+        query = csr.execute(""" 
+        SELECT * 
+        FROM songs s 
+        WHERE 
+        s.title = ?
+        AND 
+        s.duration = ?;
+        """, (title,duration))
+        
+        if query == None: 
+            csr.execute(""" 
+            INSERT INTO songs  
+            VALUES (?,?,?);
+            """, (max_sid+1, title, duration))        
+            
+            for i in artists: 
+                csr.execute(""" 
+                INSERT INTO perform (aid) 
+                VALUES (?,?);
+                """, (artists[i], max_sid+1))
+
+            return Song(max_sid+1, title, duration)
+        else:
+            return None 
+        
+
     def searchArtists(self, search: str) -> List[Artist]:
         pass
 
