@@ -96,7 +96,7 @@ class Application:
         '''
         if self.member != None:
             self.logout()
-        credentialTest = self.testArtistCredentials(adi, pwd)
+        credentialTest = self.testArtistCredentials(aid, pwd)
         success = False
         if credentialTest != None:
             # Password matches
