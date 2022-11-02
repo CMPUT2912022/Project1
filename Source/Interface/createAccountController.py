@@ -96,6 +96,7 @@ class createAccountVC(tk.Frame):
             self.error_label.config(text="")
             self.wipe_frame()
             uvc = UserVC(self.app, self.parent)
+            self.destroy()
 
 
 

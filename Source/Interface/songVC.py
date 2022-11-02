@@ -3,8 +3,6 @@ from tkinter import ttk
 from Application.application import *
 from Application.dataObjects import *
 from math import *
-from Interface.playlistVC import *
-from Interface.songVC import *
 
 class SongSearchVC(tk.Frame):
     def __init__(self, app, parent=None):
@@ -34,8 +32,6 @@ class SongSearchVC(tk.Frame):
         self.searchView['show'] = 'headings'  # Remove empty first column
         self.searchView.grid(column=0, row=0, columnspan=5)
 
-        self.searchView.bind("<<TreeviewSelect>>", self.openSelectedItem)
-
         search_entry = tk.Entry(self, width=5, textvariable=self.search)
         search_entry.grid(column=0, row=1, sticky=(tk.W, tk.E))
 
@@ -54,11 +50,6 @@ class SongSearchVC(tk.Frame):
         for child in self.winfo_children(): 
             child.grid_configure(padx=5, pady=5)
 
-
-    #PREVIOUS AND NEXT JUST HANDLE MOVING THE PAGE BACK AND FORTH
-    #THIS IS DONE USING THE SELF.CURRENT_INDEX AND MAKING SURE ONLY
-    #5 ITEMS ARE DISPLAYED AT A TIME, BY MOVING THE INDEX WE
-    #CHANGE WHICH 5 WE SEE
     def previous_action(self):
         if self.current_index != 0:
             self.current_index -=1
@@ -74,23 +65,8 @@ class SongSearchVC(tk.Frame):
     def back_action(self):
         self.destroy()
 
-    #WHEN A PLAYLIST OR SONG IS SELECTED WE NEED TO OPEN A NEW WINDOW
-    #DEPENDING ON THE TYPE. A PLAYLIST WINDOW DISPLAYS ALL OF ITS SONGS
-    #AND IF SOMETHING IS PRESSED IN IT IT DISPLAYS A SONG WINDOW
-    #IF A SONG IS PRESSED THEN A SONG WINDOWS DISPLAYS THE 3 OPTIONS
-    #LISTEN IN REQUIRMENTS
-    def openSelectedItem(self, a):
-        selectedItem = self.searchView.selection()[0]
-        itemType = self.searchView.item(selectedItem)['values'][3]
-        itemID = self.searchView.item(selectedItem)['values'][0]
-        if itemType == "Song":
-            svc = songVC(self.app, self.parent, itemID)
-        elif itemType == "Playlist":
-            pvc = playlistVC(self.app, self.parent, itemID)
 
 
-
-        
     def clear_all(self):
        for item in self.searchView.get_children():
           self.searchView.delete(item)
