@@ -113,7 +113,7 @@ class SongSearchVC(tk.Frame):
                # (6, Playlist(6, "My Cool Playlist", 69420))]  # Test data
 
         data = self.app.searchSongAndPlaylists(terms)
-
+        
 
         self.max_index = trunc(len(data)/self.limit)
         current_page = self.current_index*self.limit
