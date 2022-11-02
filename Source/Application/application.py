@@ -146,7 +146,21 @@ class Application:
         return
 
     def getSongDetails(self, sid: int) -> Song:
-        pass
+        csr = self.conn.cursor()
+	csr.execute("""
+	SELECT a.name, a.aid, s.title, s.duration, pi.title 
+	FROM artist a JOIN perform p ON a.aid = p.aid 
+	JOIN (SELECT p1.title, p2.sid 
+		FROM playlist p1, plinclude p2
+		WHERE p2.sid = ?) AS playlist_inclusive pi ON pi.sid = p.sid)
+	WHERE 
+	s.sid = ?;
+	""", (sid, sid))
+	
+
+
+
+	
     def listenToSong(self, sid: int) -> None:
         pass
 
@@ -180,7 +194,6 @@ class Application:
         AND 
         p2.sid = p3.sid;
             """, (user_input,))
-        self.conn.commit()
         return data
 	
 	
