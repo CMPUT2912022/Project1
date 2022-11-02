@@ -174,10 +174,12 @@ class Application:
 
 
     def searchSongAndPlaylists(self, terms: List[str]) -> List[MusicData]:
+        #TODO FIX SQL INJECTION, SANITIZE
         data = []
         csr = self.conn.cursor()
+
         #Song Query
-        where_clause = " " + " OR title ".join(["LIKE '%" + k + "%'" for k in terms]) + " "
+        where_clause = " OR title ".join(["LIKE '%' || ? || '%'" for k in terms])
         query = """
             SELECT sid, title, duration
             FROM songs
@@ -185,7 +187,7 @@ class Application:
             """.format(where_clause = where_clause)
 
         print(query)
-        results = csr.execute(query).fetchall()
+        results = csr.execute(query, tuple(terms)).fetchall()
 
         for row in results:
             data.append((69, Song(row[0], row[1], row[2])))
