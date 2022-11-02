@@ -168,7 +168,8 @@ class Application:
         csr=self.conn.cursor()
         csr.execute("""
         INSERT INTO plinclude (sid)
-        VALUES (sid)""")
+        VALUES (?)""", (sid,))
+        self.conn.commit()
 
 
     def searchSongAndPlaylists(self, terms: List[str]) -> List[MusicData]:
@@ -206,8 +207,41 @@ class Application:
         pass
     def searchPlaylist(self, pid: int) -> List[Song]:
         pass
-    def getArtistDetails(self, aid: str) -> Artist:
-        pass
+
+
+    def getArtistStats(self, aid: str) -> ArtistStats:  # [US.06.02]
+        '''
+        returns stats on a particular artist
+        '''
+        csr = self.conn.cursor() 
+
+        # Top three listeners (users) by playtime
+        top_users_query = csr.execute("""SELECT u.uid, u.name, SUM(l.cnt) FROM users u
+            JOIN listen l ON u.uid = l.uid
+            JOIN perform p ON l.sid = p.sid
+            WHERE p.aid = ?
+            GROUP BY p.aid
+            SORT BY sum(l.cnt)
+            LIMIT 3;
+            """, (aid,))
+
+
+        # Top 3 playlists that include the largest number of their songs
+        top_playlists_query = csr.execute("""SELECT p.pid, p.title, SUM(), COUNT(pinc.sid) FROM playlists p
+            JOIN plinclude pinc ON p.pid = pinc.pid
+            JOIN perform perf ON p.sid = perf.sid
+            WHERE a.aid = ?
+            GROUP BY p.pid, a.aid
+            SORT BY COUNT(pinc.sid)
+            LIMIT 3;""", (aid,))
+
+
+        users = [User(q[1], q[2]) for q in top_users_query.fetchall()]
+        playlists = [Playlist(q[1], q[2]) for q in top_users_query.fetchall()]
+        return ArtistStats(users, playlists)
+        
+
+
     def addSong(self, title: str, duration: int) -> None:
         pass
     def searchArtists(self, search: str) -> List[Artist]:
