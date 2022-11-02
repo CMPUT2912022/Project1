@@ -18,3 +18,10 @@ class Playlist(MusicData):
     pass
 
 
+class ArtistStats:
+    top_songs = []
+    top_playlists = []
+
+    def __init__(self, top_songs, top_playlists):
+        self.top_songs = top_songs
+        self.top_playlists = top_playlists

@@ -3,8 +3,6 @@ from tkinter import ttk
 from Application.application import *
 from Application.dataObjects import *
 from math import *
-from Interface.playlistVC import *
-from Interface.songVC import *
 
 class SongSearchVC(tk.Frame):
     def __init__(self, app, parent=None):
@@ -32,10 +30,7 @@ class SongSearchVC(tk.Frame):
         self.searchView.heading('Duration', text='Duration')
         self.searchView.heading('Type', text='Type')
         self.searchView['show'] = 'headings'  # Remove empty first column
-
         self.searchView.grid(column=0, row=0, columnspan=5)
-
-        self.searchView.bind("<<TreeviewSelect>>", self.openSelectedItem)
 
         search_entry = tk.Entry(self, width=5, textvariable=self.search)
         search_entry.grid(column=0, row=1, sticky=(tk.W, tk.E))
@@ -55,11 +50,6 @@ class SongSearchVC(tk.Frame):
         for child in self.winfo_children(): 
             child.grid_configure(padx=5, pady=5)
 
-
-    #PREVIOUS AND NEXT JUST HANDLE MOVING THE PAGE BACK AND FORTH
-    #THIS IS DONE USING THE SELF.CURRENT_INDEX AND MAKING SURE ONLY
-    #5 ITEMS ARE DISPLAYED AT A TIME, BY MOVING THE INDEX WE
-    #CHANGE WHICH 5 WE SEE
     def previous_action(self):
         if self.current_index != 0:
             self.current_index -=1
@@ -75,23 +65,8 @@ class SongSearchVC(tk.Frame):
     def back_action(self):
         self.destroy()
 
-    #WHEN A PLAYLIST OR SONG IS SELECTED WE NEED TO OPEN A NEW WINDOW
-    #DEPENDING ON THE TYPE. A PLAYLIST WINDOW DISPLAYS ALL OF ITS SONGS
-    #AND IF SOMETHING IS PRESSED IN IT IT DISPLAYS A SONG WINDOW
-    #IF A SONG IS PRESSED THEN A SONG WINDOWS DISPLAYS THE 3 OPTIONS
-    #LISTEN IN REQUIRMENTS
-    def openSelectedItem(self, a):
-        selectedItem = self.searchView.selection()[0]
-        itemType = self.searchView.item(selectedItem)['values'][3]
-        itemID = self.searchView.item(selectedItem)['values'][0]
-        if itemType == "Song":
-            svc = songVC(self.app, self.parent, itemID)
-        elif itemType == "Playlist":
-            pvc = playlistVC(self.app, self.parent, itemID)
 
 
-
-        
     def clear_all(self):
        for item in self.searchView.get_children():
           self.searchView.delete(item)
@@ -102,19 +77,17 @@ class SongSearchVC(tk.Frame):
 
         print(terms)
 
-        #data = [(1,Song(1, "Luckenbach Texas", 69)),
-                #(2, Song(2, "Allah's Plan", 420)),
-                #(3, Playlist(3, "My Cool Playlist", 69420)),
-                #(4,Song(4, "Luckenbach Texas", 69)),
-               # (5, Song(5, "Allah's Plan", 420)),
-               # (6, Playlist(6, "My Cool Playlist", 69420))]  # Test data
+        data = [(1,Song(1, "Luckenbach Texas", 69)),
+                (2, Song(2, "Allah's Plan", 420)),
+                (3, Playlist(3, "My Cool Playlist", 69420)),
+                (4,Song(4, "Luckenbach Texas", 69)),
+                (5, Song(5, "Allah's Plan", 420)),
+                (6, Playlist(6, "My Cool Playlist", 69420))]  # Test data
 
-        data = self.app.searchSongAndPlaylists(terms)
+        #data = self.app.searchSongAndPlaylists(terms)
 
 
         self.max_index = trunc(len(data)/self.limit)
-        if len(data)%self.limit == 0:
-            self.max_index -=1;
         current_page = self.current_index*self.limit
         for i in range(current_page, current_page + self.limit):
             if i >= len(data):
@@ -124,6 +97,5 @@ class SongSearchVC(tk.Frame):
             self.searchView.insert("",'end',iid=i, values=(md.ID, md.title, md.duration, md.__class__.__name__))
         print(data)
 
-
-    def back_action(self):
+    def logout_action(self):
         self.grid_forget()

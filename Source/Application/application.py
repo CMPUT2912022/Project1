@@ -156,6 +156,7 @@ class Application:
         WHERE 
         s.sid = ?;
         """, (sid, sid))
+        #TODO: Return song
 	
 
 
@@ -168,33 +169,41 @@ class Application:
         csr=self.conn.cursor()
         csr.execute("""
         INSERT INTO plinclude (sid)
-        VALUES (sid)
-        WHERE pid=?""",(pid))
-        
+        VALUES (?)""", (sid,))
+        self.conn.commit()
+
 
     def searchSongAndPlaylists(self, terms: List[str]) -> List[MusicData]:
-        data : List[MusicData]
+        data = []
         csr = self.conn.cursor()
-        user_input=raw_input("Enter a song:") 
         #Song Query
-        csr.execute(""" 
-        SELECT *
-        FROM songs 
-        WHERE 
-        title LIKE %?;
-            """, (user_input,)) 
+        where_clause = " " + " OR title ".join(["LIKE '%" + k + "%'" for k in terms]) + " "
+        query = """
+            SELECT sid, title, duration
+            FROM songs
+            WHERE title {where_clause};
+            """.format(where_clause = where_clause)
+
+        print(query)
+        results = csr.execute(query).fetchall()
+
+        for row in results:
+            data.append((69, Song(row[0], row[1], row[2])))
+
+
+        print(data)
 
         #Playlist Query
-        csr.execute("""
-        SELECT p1.pid, p1.title, SUM(p3.duration)
-        FROM playlists p1, plinclude p2, songs p3
-        WHERE 
-        title LIKE %?
-        AND 
-        p1.pid = p2.pid
-        AND 
-        p2.sid = p3.sid;
-            """, (user_input,))
+#        csr.execute("""
+#        SELECT p1.pid, p1.title, SUM(p3.duration)
+#        FROM playlists p1, plinclude p2, songs p3
+#        WHERE 
+#        title LIKE %?
+#        AND 
+#        p1.pid = p2.pid
+#        AND 
+#        p2.sid = p3.sid;
+#            """, (,))
         return data
 	
 	
@@ -207,6 +216,7 @@ class Application:
         pass
     def searchPlaylist(self, pid: int) -> List[Song]:
         pass
+
     def getArtistDetails(self, aid: str) -> Artist:
         pass
 
@@ -242,6 +252,44 @@ class Application:
         else:
             return None 
         
+
+
+
+    def getArtistStats(self, aid: str) -> ArtistStats:  # [US.06.02]
+        '''
+        returns stats on a particular artist
+        '''
+        csr = self.conn.cursor() 
+
+        # Top three listeners (users) by playtime
+        top_users_query = csr.execute("""SELECT u.uid, u.name, SUM(l.cnt) FROM users u
+            JOIN listen l ON u.uid = l.uid
+            JOIN perform p ON l.sid = p.sid
+            WHERE p.aid = ?
+            GROUP BY p.aid
+            SORT BY sum(l.cnt)
+            LIMIT 3;
+            """, (aid,))
+
+
+        # Top 3 playlists that include the largest number of their songs
+        top_playlists_query = csr.execute("""SELECT p.pid, p.title, SUM(), COUNT(pinc.sid) FROM playlists p
+            JOIN plinclude pinc ON p.pid = pinc.pid
+            JOIN perform perf ON p.sid = perf.sid
+            WHERE a.aid = ?
+            GROUP BY p.pid, a.aid
+            SORT BY COUNT(pinc.sid)
+            LIMIT 3;""", (aid,))
+
+
+        users = [User(q[1], q[2]) for q in top_users_query.fetchall()]
+        playlists = [Playlist(q[1], q[2]) for q in top_users_query.fetchall()]
+        return ArtistStats(users, playlists)
+        
+
+
+    def addSong(self, title: str, duration: int) -> None:
+        pass
 
     def searchArtists(self, search: str) -> List[Artist]:
         pass
