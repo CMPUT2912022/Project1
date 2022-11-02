@@ -26,7 +26,6 @@ class MemberChoiceVC(tk.Frame):
 
 
     def user_action(self):
-        print("user")
         self.handler(True)
         self.grid_forget()
         #self.destroy()
