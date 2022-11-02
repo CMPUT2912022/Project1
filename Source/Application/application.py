@@ -174,33 +174,36 @@ class Application:
 
 
     def searchSongAndPlaylists(self, terms: List[str]) -> List[MusicData]:
-        data : List[MusicData]
+        data = []
         csr = self.conn.cursor()
-        for t in terms:
-            #Song Query
-            results = csr.execute(""" 
-            SELECT *
-            FROM songs 
-            WHERE 
-            title LIKE %?;
-                """, (t,)).fetchall()
+        #Song Query
+        where_clause = " " + " OR title ".join(["LIKE '%" + k + "%'" for k in terms]) + " "
+        query = """
+            SELECT sid, title, duration
+            FROM songs
+            WHERE title {where_clause};
+            """.format(where_clause = where_clause)
 
-            for row in results:
-                data.append(Song())
+        print(query)
+        results = csr.execute(query).fetchall()
+
+        for row in results:
+            data.append((69, Song(row[0], row[1], row[2])))
 
 
+        print(data)
 
         #Playlist Query
-        csr.execute("""
-        SELECT p1.pid, p1.title, SUM(p3.duration)
-        FROM playlists p1, plinclude p2, songs p3
-        WHERE 
-        title LIKE %?
-        AND 
-        p1.pid = p2.pid
-        AND 
-        p2.sid = p3.sid;
-            """, (user_input,))
+#        csr.execute("""
+#        SELECT p1.pid, p1.title, SUM(p3.duration)
+#        FROM playlists p1, plinclude p2, songs p3
+#        WHERE 
+#        title LIKE %?
+#        AND 
+#        p1.pid = p2.pid
+#        AND 
+#        p2.sid = p3.sid;
+#            """, (,))
         return data
 	
 	
