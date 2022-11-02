@@ -52,9 +52,6 @@ class SongSearchVC(tk.Frame):
         back_button = tk.Button(self, text='Back', command=self.back_action)
         back_button.grid(column=4, row=1)
 
-        back_button = tk.Button(self, text='back', command=self.back_action)
-        back_button.grid(column=3, row=1)
-
         for child in self.winfo_children(): 
             child.grid_configure(padx=5, pady=5)
 
@@ -116,6 +113,8 @@ class SongSearchVC(tk.Frame):
 
 
         self.max_index = trunc(len(data)/self.limit)
+        if len(data)%self.limit == 0:
+            self.max_index -=1;
         current_page = self.current_index*self.limit
         for i in range(current_page, current_page + self.limit):
             if i >= len(data):
