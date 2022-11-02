@@ -176,8 +176,11 @@ class Application:
     def searchSongAndPlaylists(self, terms: List[str]) -> List[MusicData]:
         data = []
         csr = self.conn.cursor()
-        #Song Query
-        where_clause = " " + " OR title ".join(["LIKE '%" + k + "%'" for k in terms]) + " "
+
+        # TODO: Sort by most hits on keywords
+
+        # Song Query
+        where_clause = " OR title ".join(["LIKE '%' || ? || '%'" for k in terms])
         query = """
             SELECT sid, title, duration
             FROM songs
@@ -185,25 +188,30 @@ class Application:
             """.format(where_clause = where_clause)
 
         print(query)
-        results = csr.execute(query).fetchall()
+        results = csr.execute(query, tuple(terms)).fetchall()
 
         for row in results:
+            #TODO Fix hardcoded weight
             data.append((69, Song(row[0], row[1], row[2])))
 
+        # Playlist query
+        where_clause = " OR p.title ".join(["LIKE '%' || ? || '%'" for k in terms])
+        query = """
+            SELECT p.pid, p.title, SUM(s.duration)
+            FROM playlists p
+            JOIN plinclude pi ON p.pid = pi.pid
+            JOIN songs s ON s.sid = pi.sid
+            WHERE p.title {where_clause}
+            GROUP BY p.pid;
+            """.format(where_clause = where_clause)
+
+        results = csr.execute(query, tuple(terms)).fetchall()
+
+        for row in results:
+            #TODO Fix hardcoded weight
+            data.append((69, Playlist(row[0], row[1], row[2])))
 
         print(data)
-
-        #Playlist Query
-#        csr.execute("""
-#        SELECT p1.pid, p1.title, SUM(p3.duration)
-#        FROM playlists p1, plinclude p2, songs p3
-#        WHERE 
-#        title LIKE %?
-#        AND 
-#        p1.pid = p2.pid
-#        AND 
-#        p2.sid = p3.sid;
-#            """, (,))
         return data
 	
 	
