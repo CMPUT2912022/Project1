@@ -30,42 +30,93 @@ class Application:
         return True if query != None else False
 
 
+    def registerUser(self, uid: str, name: str, pwd: str) -> bool:
+        '''
+        Registers a user, also logs them in. Can be assumed self.member will be set
+        after successfully calling this function.
+        Returns bool indicating whether registration was successful.
+        '''
+        if self.memberIsUser(uid) or self.memberIsArtist(uid) or uid == "" or name == "" or pwd == "":
+            return False
+        else:
+            csr = self.conn.cursor() 
+            query = csr.execute("INSERT INTO users VALUES (?, ?, ?);", (uid, name, pwd))
+            self.conn.commit()
+            self.member = User(uid, name)
+            return True
+        
+
+    def testUserCredentials(self, uid: str, pwd: str):  # [US.01.06]
+        '''
+        For testing a user's login credentials (without actually logging them in)
+        returns None if failed, otherwise returns User
+        '''
+        csr = self.conn.cursor() 
+        query = csr.execute("SELECT uid, name, pwd FROM users WHERE uid = ?", (uid,)).fetchone()
+        success = None
+        if query != None and query[2] == pwd:
+            # Password matches
+            success = User(uid, query[1])
+        return success
+
+
     def userLogin(self, uid: str, pwd: str) -> bool:  # [US.01.06]
         '''
         For logging in a user (not an artist)!
         '''
         if self.member != None:
             # Log current member out
-            # End all of member's sessions
-            # TODO
-            pass
-        csr = self.conn.cursor() 
-        query = csr.execute("SELECT uid, name, pwd FROM users WHERE uid = ?", (uid,)).fetchone()
+            self.logout()
+        credentialTest = self.testUserCredentials(uid, pwd)
         success = False
+        if credentialTest != None:
+            # Password matches
+            self.member = credentialTest
+            success = True
+        return success
+    
+
+    def testArtistCredentials(self, aid: str, pwd: str):  # [US.01.06]
+        '''
+        For testing an artist's login credentials (without actually logging them in)
+        returns None if failed, otherwise returns Artist 
+        '''
+        csr = self.conn.cursor() 
+        query = csr.execute("SELECT aid, name, pwd FROM artists WHERE aid = ?", (aid,)).fetchone()
+        success = None
         if query != None and query[2] == pwd:
             # Password matches
-            self.member = User(uid, query[1])
-            success = True
+            success = Artist(aid, query[1])  # TODO: Get nationality too
         return success
 
 
-    def artistLogin(self, aid: str, pwd: str) -> Artist:
+    def artistLogin(self, aid: str, pwd: str) -> bool:
         '''
         For logging in an artist.
         '''
         if self.member != None:
-            # Log current member out
-            # End all of member's sessions
-            # TODO
-            pass
-        csr = self.conn.cursor() 
-        query = csr.execute("SELECT aid, name, pwd FROM artists WHERE aid = ?", (aid,)).fetchone()
+            self.logout()
+        credentialTest = self.testArtistCredentials(aid, pwd)
         success = False
-        if query != None and query[2] == pwd:
+        if credentialTest != None:
             # Password matches
-            self.member = Artist(aid, query[1])
+            self.member = credentialTest
             success = True
         return success
+
+
+    def logout(self):
+        '''
+        Handles logging out members (artist and user)
+        '''
+        if isinstance(self.member, User):
+            # Handle user logout
+            self.endSession()
+            self.member = None
+        elif isinstance(self.member, Artist):
+            # Handle artist logout
+            self.member = None
+        return
 
 
     def startSession(self):  # [US.01.01]
@@ -118,7 +169,8 @@ class Application:
         csr=self.conn.cursor()
         csr.execute("""
         INSERT INTO plinclude (sid)
-        VALUES (sid)""")
+        VALUES (?)""", (sid,))
+        self.conn.commit()
 
 
     def searchSongAndPlaylists(self, terms: List[str]) -> List[MusicData]:
@@ -149,7 +201,6 @@ class Application:
         AND 
         p2.sid = p3.sid;
             """, (user_input,))
-        self.conn.commit()
         return data
 	
 	
@@ -162,8 +213,41 @@ class Application:
         pass
     def searchPlaylist(self, pid: int) -> List[Song]:
         pass
-    def getArtistDetails(self, aid: str) -> Artist:
-        pass
+
+
+    def getArtistStats(self, aid: str) -> ArtistStats:  # [US.06.02]
+        '''
+        returns stats on a particular artist
+        '''
+        csr = self.conn.cursor() 
+
+        # Top three listeners (users) by playtime
+        top_users_query = csr.execute("""SELECT u.uid, u.name, SUM(l.cnt) FROM users u
+            JOIN listen l ON u.uid = l.uid
+            JOIN perform p ON l.sid = p.sid
+            WHERE p.aid = ?
+            GROUP BY p.aid
+            SORT BY sum(l.cnt)
+            LIMIT 3;
+            """, (aid,))
+
+
+        # Top 3 playlists that include the largest number of their songs
+        top_playlists_query = csr.execute("""SELECT p.pid, p.title, SUM(), COUNT(pinc.sid) FROM playlists p
+            JOIN plinclude pinc ON p.pid = pinc.pid
+            JOIN perform perf ON p.sid = perf.sid
+            WHERE a.aid = ?
+            GROUP BY p.pid, a.aid
+            SORT BY COUNT(pinc.sid)
+            LIMIT 3;""", (aid,))
+
+
+        users = [User(q[1], q[2]) for q in top_users_query.fetchall()]
+        playlists = [Playlist(q[1], q[2]) for q in top_users_query.fetchall()]
+        return ArtistStats(users, playlists)
+        
+
+
     def addSong(self, title: str, duration: int) -> None:
         pass
     def searchArtists(self, search: str) -> List[Artist]:
