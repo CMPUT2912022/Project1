@@ -8,8 +8,8 @@ class CreateSongVC(tk.Frame):
         self.app = app
         self.parent = parent
         self.mid = tk.StringVar()
-        self.pwd = tk.StringVar()
-        self.name = tk.StringVar()
+        self.length = tk.StringVar()
+        self.artists = tk.StringVar()
         
         
         tk.Frame.__init__(self, parent)
@@ -27,7 +27,7 @@ class CreateSongVC(tk.Frame):
         desc1_label.grid(column=0, row=0)
         
         
-        # member id entry
+        # song name
         mid_entry = tk.Entry(self, width=25, textvariable=self.mid)
         mid_entry.grid(column=1, row=0, sticky=(tk.W, tk.E))
         mid_entry.focus()
@@ -36,16 +36,16 @@ class CreateSongVC(tk.Frame):
         desc3_label = tk.Label(self, text= "Song length:",font=(24))
         desc3_label.grid(column=0, row=1)
         
-        # Name entry
-        name_entry = tk.Entry(self, width=25, textvariable=self.name)
+        # song length
+        name_entry = tk.Entry(self, width=25, textvariable=self.length)
         name_entry.grid(column=1, row=1, sticky=(tk.W, tk.E))
 
         # label 3
         desc2_label = tk.Label(self, text= "Supporting artist ID:",font=(24))
         desc2_label.grid(column=0, row=2)
         
-        # password entry
-        pwd_entry = tk.Entry(self, width=25, textvariable=self.pwd, show='*')
+        # supporting artists
+        pwd_entry = tk.Entry(self, width=25, textvariable=self.artists, show='*')
         pwd_entry.grid(column=1, row=2, sticky=(tk.W, tk.E))
 
 
@@ -85,12 +85,12 @@ class CreateSongVC(tk.Frame):
         #TO THE MAIN ARTIST vc
         #CODE SHOULD BE SIMILAR TO THE ONE USED IN THE ACCOUNTCREATIONCONTROLLER.PY
 
-        s = self.app.addSong(title, duration, artists)
+        s = self.app.addSong(self.mid, self.length, self.artists)
         if s != None:
-            # Success
+            self.error_label.config(text="Song created successfully", fg="green")
 
         else:
-            # Failure
+            self.error_label.config(text="Song already exists! C'mon, I'm sure you can think of something new.", fg="red")
 
 
 
