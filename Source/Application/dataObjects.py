@@ -27,12 +27,13 @@ class ArtistStats:
 
 class ArtistDetails: 
     aid = None
-    title=[]
-    duration=[]
-    def __init__(self, aid, title, duration):
+    name = ""
+    songs=[]
+    def __init__(self, aid, name, songs):
         self.aid = aid
-        self.title = title
-        self.duration = duration
+        self.name = name
+        self.songs = songs
+
 class SongDetails:
     sid = None
     title = ""

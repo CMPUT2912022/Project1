@@ -27,7 +27,8 @@ class ArtistSearchVC(tk.Frame):
         self.create_view()
 
     def create_view(self):
-        self.searchView = ttk.Treeview(self, columns=('Name', 'Nationality', 'Number of Songs'))
+        self.searchView = ttk.Treeview(self, columns=('aid', 'Name', 'Nationality', 'Number of Songs'))
+        self.searchView.heading('aid', text='aid')
         self.searchView.heading('Name', text='Name')
         self.searchView.heading('Nationality', text='Nationality')
         self.searchView.heading('Number of Songs', text='Number of Songs')
@@ -98,13 +99,7 @@ class ArtistSearchVC(tk.Frame):
         terms = self.search.get().split()
 
         print(terms)
-
-        data = [(1,["Jack Harlow", "Canadian", ["song 1", "song 2", "song 3"]]),
-                (2, ["benny asdad Harlow", "american", ["song 1", "song 2", "song 3"]]),
-                (3, ["the third one Harlow", "croatian", ["song 1", "song 2", "song 3"]])]  # Test data
-
-        #data = self.app.searchArtists(terms)
-
+        data = self.app.searchArtists(terms)
 
         self.max_index = trunc(len(data)/self.limit)
         if len(data)%self.limit == 0:
@@ -113,10 +108,10 @@ class ArtistSearchVC(tk.Frame):
         for i in range(current_page, current_page + self.limit):
             if i >= len(data):
                 break
-            d = data[i]
-            md = d[1]  # MusicData
-            #THIS LINE NEEDS FIXING, IM NOT SURE WHAT THE FORMATTING IS FOR ARTISTS
-            self.searchView.insert("",'end',iid=i, values=(md[0], md[1], len(md[2])))
+            a = data[i][1]  # Artist
+            t_songs = data[i][2]
+
+            self.searchView.insert("",'end',iid=i, values=(a.mid, a.name, a.nationality, t_songs))
         print(data)
 
 

@@ -346,20 +346,32 @@ class Application:
         pass
 
     def searchArtists(self, terms: List[str]) -> List[Artist]:
-        data=[]
-        csr=self.conn.cursor()
-
-        where_clause = " OR name ".join(["LIKE '%' || ? || '%'" for i in terms])
+        if terms == None or len(terms)==0:
+            return data
+        csr = self.conn.cursor()
+        # Song Query
+        where_clause = " OR a.name".join(["LIKE '%' || ? || '%'" for k in terms])
+        hit_clause = " + ".join(["(a.name LIKE '%' || ? || '%')" for k in terms])
         query = """
-            SELECT a.name, a.nationality, COUNT(p.sid)
-            FROM artists a, perform p
-            WHERE a.name {where_clause};
-            """.format(where_clause = where_clause)
-            
-        results = csr.execute(query, tuple(terms)).fetchall()
+            SELECT a.aid, a.name, a.nationality, COUNT(p.sid), {hit_clause}
+            FROM artists a
+            JOIN perform p ON a.aid = p.aid
+            WHERE a.name {where_clause}
+            GROUP BY a.aid
+            ORDER BY {hit_clause} DESC;
+            """.format(where_clause = where_clause, hit_clause = hit_clause)
+        results = csr.execute(query, terms + terms + terms).fetchall()
 
+        artists = []
         for row in results:
-            data.append((1, Artists(row[0],row[1],row[2])))
+            #data.append((row[3], Artist(row[0], row[1], row[2])))
+            artists.append((row[4], Artist(row[0], row[1], row[2]), row[3]))
+        return artists
+
+
+
+
+
 
 
     def __init_database(self, dbName):

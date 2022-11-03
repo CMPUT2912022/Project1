@@ -11,8 +11,10 @@ class Member:
 
 
 class Artist(Member):
-    def __init__(self, mid, name):
+    nationality = ""
+    def __init__(self, mid, name, nationality=None):
         super().__init__(mid, name)
+        self.nationality = nationality
         return
 
 
