@@ -147,7 +147,7 @@ class Application:
 
     def getSongDetails(self, sid: int) -> Song:
         csr = self.conn.cursor()
-        csr.execute("""
+        query = csr.execute("""
         SELECT a.name, a.aid, s.title, s.duration, pi.title 
         FROM artist a JOIN perform p ON a.aid = p.aid 
         JOIN (SELECT p1.title, p2.sid 
@@ -155,12 +155,9 @@ class Application:
             WHERE p2.sid = ?) AS playlist_inclusive pi ON pi.sid = p.sid)
         WHERE 
         s.sid = ?;
-        """, (sid, sid))
+        """, (sid, sid)).fetchone()
         #TODO: Return song
 	
-
-
-
 	
     def listenToSong(self, sid: int) -> None:
         pass
@@ -175,47 +172,43 @@ class Application:
 
     def searchSongAndPlaylists(self, terms: List[str]) -> List[MusicData]:
         data = []
+        if terms == None or len(terms)==0:
+            return data
         csr = self.conn.cursor()
-
-        # TODO: Sort by most hits on keywords
-
         # Song Query
         where_clause = " OR title ".join(["LIKE '%' || ? || '%'" for k in terms])
+        hit_clause = " + ".join(["(title LIKE '%' || ? || '%')" for k in terms])
         query = """
-            SELECT sid, title, duration
+            SELECT sid, title, duration, {hit_clause}
             FROM songs
-            WHERE title {where_clause};
-            """.format(where_clause = where_clause)
-
-        results = csr.execute(query, tuple(terms)).fetchall()
+            WHERE title {where_clause}
+            ORDER BY {hit_clause} DESC;
+            """.format(where_clause = where_clause, hit_clause = hit_clause)
+        results = csr.execute(query, terms + terms + terms).fetchall()
 
         for row in results:
-            #TODO Fix hardcoded weight
-            data.append((69, Song(row[0], row[1], row[2])))
+            data.append((row[3], Song(row[0], row[1], row[2])))
 
         # Playlist query
         where_clause = " OR p.title ".join(["LIKE '%' || ? || '%'" for k in terms])
+        hit_clause = " + ".join(["(p.title LIKE '%' || ? || '%')" for k in terms])
         query = """
-            SELECT p.pid, p.title, SUM(s.duration)
+            SELECT p.pid, p.title, SUM(s.duration), {hit_clause}
             FROM playlists p
             JOIN plinclude pi ON p.pid = pi.pid
             JOIN songs s ON s.sid = pi.sid
             WHERE p.title {where_clause}
-            GROUP BY p.pid;
-            """.format(where_clause = where_clause)
-
-        results = csr.execute(query, tuple(terms)).fetchall()
+            GROUP BY p.pid
+            ORDER BY {hit_clause} DESC;
+            """.format(where_clause = where_clause, hit_clause = hit_clause)
+        results = csr.execute(query, terms+terms+terms ).fetchall()
 
         for row in results:
-            #TODO Fix hardcoded weight
-            data.append((69, Playlist(row[0], row[1], row[2])))
+            data.append((row[3], Playlist(row[0], row[1], row[2])))
 
+        # Sort data (not sorted since playlists added)
+        data = sorted(data, key=lambda x: x[0], reverse=True)
         return data
-	
-	
-
-
-
 
 
     def getPlaylistDetails(self, pid: int) -> Playlist:
