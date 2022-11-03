@@ -37,3 +37,13 @@ class SongDetails:
         self.duration = duration
         self.artist_names = artist_names
         self.playlist_names = playlist_names
+
+
+class PlaylistDetails:
+    pid = None
+    title = ""
+    songs = []
+    def __init__(self, pid, title, songs):
+        self.pid = pid
+        self.title = title
+        self.songs = songs
