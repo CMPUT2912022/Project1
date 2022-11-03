@@ -51,8 +51,8 @@ INSERT INTO perform (aid, sid) VALUES
 
 
 INSERT INTO playlists (pid, title, uid) VALUES
-(1, "Country for the Boys", 2),
-(2, "Certified Bangers", 5);
+(1, "Country for the Boys", "chm"),
+(2, "Certified Bangers", "chm");
 
 
 INSERT INTO plinclude (pid, sid, sorder) VALUES
