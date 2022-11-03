@@ -78,13 +78,19 @@ class CreateSongVC(tk.Frame):
         self.destroy()
 
     def create_action(self):
-        pass
         #HERE GOES CODE TO CHECK IF THE USERS INPUT SONG NAME AND SONG LENGTH ALREADY EXIST
         #IF THEY DO WE CHANGE THE ERROR LABEL BACK TO WHAT IT IS ABOVE
         #IF THE SONG IS NEW AND DOESNT MATCH ANYTHING WE ALREADY HAVE IT IS ADDED
         #WITH THE INFORMATION PROVIDED AND THE WINDOW DESTROY WITH SELF.DESTROY() TO GO BACK
         #TO THE MAIN ARTIST vc
         #CODE SHOULD BE SIMILAR TO THE ONE USED IN THE ACCOUNTCREATIONCONTROLLER.PY
+
+        s = self.app.addSong(title, duration, artists)
+        if s != None:
+            # Success
+
+        else:
+            # Failure
 
 
 
