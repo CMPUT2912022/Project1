@@ -4,98 +4,75 @@ from Application.application import *
 from Application.dataObjects import *
 from math import *
 
-class SongSearchVC(tk.Frame):
-    def __init__(self, app, parent=None):
+class songVC(tk.Frame):
+    def __init__(self, app, parent=None, root = None, itemID = 0):
         self.app = app
         self.parent = parent
-
+        self.itemID = itemID
+        self.root = root
+        self.mid = tk.StringVar()
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-
-        self.current_index = 0
-        self.max_index = 0
-        self.limit = 5
-
-        self.search = tk.StringVar()
-        self.searchView = None
+        self.columnconfigure(1, weight=1)
+        self.columnconfigure(2, weight=1)
+        self.columnconfigure(3, weight=1)
 
         self.create_view()
 
     def create_view(self):
-        self.searchView = ttk.Treeview(self, columns=('id', 'Title', 'Duration', 'Type'))
-        self.searchView.heading('id', text='id')
-        self.searchView.heading('Title', text='Title')
-        self.searchView.heading('Duration', text='Duration')
-        self.searchView.heading('Type', text='Type')
-        self.searchView['show'] = 'headings'  # Remove empty first column
-        self.searchView.grid(column=0, row=0, columnspan=5)
+    
+        desc1_label = tk.Label(self, text= f"Song ID: {self.itemID}", font=(20))
+        desc1_label.grid(column=0, row=0, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+        #artist name
+        desc2_label = tk.Label(self, text= "", font=(20))
+        desc2_label.grid(column=0, row=1, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+        #song title
+        desc4_label = tk.Label(self, text= "", font=(20))
+        desc4_label.grid(column=0, row=2, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+        #song duration
+        desc5_label = tk.Label(self, text= "", font=(20))
+        desc5_label.grid(column=0, row=3, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+        #list of playslists the song is in
+        desc6_label = tk.Label(self, text= "", font=(20))
+        desc6_label.grid(column=0, row=4, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
 
-        search_entry = tk.Entry(self, width=5, textvariable=self.search)
-        search_entry.grid(column=0, row=1, sticky=(tk.W, tk.E))
+        search_button = tk.Button(self, text='Play', command=self.listen_action)
+        search_button.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E, tk.S))
 
-        search_button = tk.Button(self, text='Search', command=self.search_action)
-        search_button.grid(column=1, row=1)
-
-        up_button = tk.Button(self, text='Next', command=self.next_action)
-        up_button.grid(column=3, row=1)
+        up_button = tk.Button(self, text='Info', command=self.info_action)
+        up_button.grid(column=1, row=5, sticky=(tk.N, tk.W, tk.E, tk.S))
         
-        down_button = tk.Button(self, text='Previous', command=self.previous_action)
-        down_button.grid(column=2, row=1)
+        down_button = tk.Button(self, text='Add to playlist', command=self.playlist_action)
+        down_button.grid(column=2, row=5, sticky=(tk.N, tk.W, tk.E, tk.S))
         
         back_button = tk.Button(self, text='Back', command=self.back_action)
-        back_button.grid(column=4, row=1)
+        back_button.grid(column=3, row=5, sticky=(tk.N, tk.W, tk.E, tk.S))
+        
+        mid_entry = tk.Entry(self, width=15, textvariable=self.mid)
+        mid_entry.grid(column=2, row=6,sticky=(tk.N, tk.W, tk.E, tk.S))
+        mid_entry.focus()
 
         for child in self.winfo_children(): 
-            child.grid_configure(padx=5, pady=5)
+            child.grid_configure(padx=10, pady=5)
 
-    def previous_action(self):
-        if self.current_index != 0:
-            self.current_index -=1
-            self.clear_all()
-            self.search_action()
 
-    def next_action(self):
-        if self.current_index != self.max_index:
-            self.current_index +=1
-            self.clear_all()
-            self.search_action()
-    
+
+    def listen_action(self):
+        #CODE FOR LISTENING SESSIONS GOES HERE
+        #IF A LISTENING SESSIONS EXISTS FOR THIS USER THEN ADD THIS SONG TO IT
+        #IF NOT CREATE A NEW ONE
+        pass
+    def info_action(self):
+        #CODE FOR GETTING A SONGS INFO GOES HERE, THEN IT JUST NEEDS TO BE ADDED TO THE LABELS
+        pass
+
+
+    def playlist_action(self):
+        #ADD SONG TO PLAYLIST, NAME OF PLAYLIST IS IN SELF.MID
+        pass
+
+
     def back_action(self):
         self.destroy()
-
-
-
-    def clear_all(self):
-       for item in self.searchView.get_children():
-          self.searchView.delete(item)
-    def search_action(self):
-        self.clear_all()
-        #terms = [t.strip() for t in self.search.get().split(',')]  # Old search pattern, splitting on commas
-        terms = self.search.get().split()
-
-        print(terms)
-
-        data = [(1,Song(1, "Luckenbach Texas", 69)),
-                (2, Song(2, "Allah's Plan", 420)),
-                (3, Playlist(3, "My Cool Playlist", 69420)),
-                (4,Song(4, "Luckenbach Texas", 69)),
-                (5, Song(5, "Allah's Plan", 420)),
-                (6, Playlist(6, "My Cool Playlist", 69420))]  # Test data
-
-        #data = self.app.searchSongAndPlaylists(terms)
-
-
-        self.max_index = trunc(len(data)/self.limit)
-        current_page = self.current_index*self.limit
-        for i in range(current_page, current_page + self.limit):
-            if i >= len(data):
-                break
-            d = data[i]
-            md = d[1]  # MusicData
-            self.searchView.insert("",'end',iid=i, values=(md.ID, md.title, md.duration, md.__class__.__name__))
-        print(data)
-
-    def logout_action(self):
-        self.grid_forget()

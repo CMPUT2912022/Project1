@@ -7,10 +7,10 @@ from Interface.playlistVC import *
 from Interface.songVC import *
 
 class SongSearchVC(tk.Frame):
-    def __init__(self, app, parent=None):
+    def __init__(self, app, parent=None, root = None):
         self.app = app
         self.parent = parent
-
+        self.root = root
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.columnconfigure(0, weight=1)
@@ -39,6 +39,7 @@ class SongSearchVC(tk.Frame):
 
         search_entry = tk.Entry(self, width=5, textvariable=self.search)
         search_entry.grid(column=0, row=1, sticky=(tk.W, tk.E))
+        search_entry.focus()
 
         search_button = tk.Button(self, text='Search', command=self.search_action)
         search_button.grid(column=1, row=1)
@@ -85,9 +86,9 @@ class SongSearchVC(tk.Frame):
         itemType = self.searchView.item(selectedItem)['values'][3]
         itemID = self.searchView.item(selectedItem)['values'][0]
         if itemType == "Song":
-            svc = songVC(self.app, self.parent, itemID)
+            svc = songVC(self.app, self.parent,self.root, itemID)
         elif itemType == "Playlist":
-            pvc = playlistVC(self.app, self.parent, itemID)
+            pvc = playlistVC(self.app, self.parent,self.root, itemID)
 
 
 
@@ -123,5 +124,3 @@ class SongSearchVC(tk.Frame):
             self.searchView.insert("",'end',iid=i, values=(md.ID, md.title, md.duration, md.__class__.__name__))
 
 
-    def back_action(self):
-        self.grid_forget()

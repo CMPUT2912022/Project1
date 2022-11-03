@@ -9,12 +9,12 @@ from Interface.createAccountController import *
 class LoginVC(tk.Frame):
     mid = None  # member id
 
-    def __init__(self, app, parent=None):
+    def __init__(self, app, parent=None, root = None):
         self.app = app
         self.parent = parent
         self.mid = tk.StringVar()
         self.pwd = tk.StringVar()
-        
+        self.root = root
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         self.columnconfigure(0, weight=1)
@@ -85,12 +85,12 @@ class LoginVC(tk.Frame):
         elif login_success_user:
             self.error_label.config(text = "")
             self.wipe_frame()
-            UserVC(self.app, self.parent)
+            UserVC(self.app, self.parent, self.root)
 
         elif login_success_artist:
             self.error_label.config(text = "")
             self.wipe_frame()
-            ArtistVC(self.app, self.parent)
+            ArtistVC(self.app, self.parent, self.root)
 
         else:
             # error label
@@ -98,7 +98,7 @@ class LoginVC(tk.Frame):
             
 
     def create_account_handler(self):
-        CreateAccountVC(self.app, self.parent)
+        CreateAccountVC(self.app, self.parent, self.root)
 
     
     def handle_member_choice(self, user: bool):
@@ -110,11 +110,11 @@ class LoginVC(tk.Frame):
         pwd = self.pwd.get()
         if user:
             self.app.userLogin(mid, pwd)
-            UserVC(self.app, self.parent)
+            UserVC(self.app, self.parent, self.root)
 
         else:
             self.app.artistLogin(mid, pwd)
-            ArtistVC(self.app, self.parent)
+            ArtistVC(self.app, self.parent, self.root)
 
         self.error_label.config(text = "")
         self.wipe_frame()
