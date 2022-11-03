@@ -187,7 +187,6 @@ class Application:
             WHERE title {where_clause};
             """.format(where_clause = where_clause)
 
-        print(query)
         results = csr.execute(query, tuple(terms)).fetchall()
 
         for row in results:
@@ -211,7 +210,6 @@ class Application:
             #TODO Fix hardcoded weight
             data.append((69, Playlist(row[0], row[1], row[2])))
 
-        print(data)
         return data
 	
 	

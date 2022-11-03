@@ -100,7 +100,6 @@ class SongSearchVC(tk.Frame):
         #terms = [t.strip() for t in self.search.get().split(',')]  # Old search pattern, splitting on commas
         terms = self.search.get().split()
 
-        print(terms)
 
         #data = [(1,Song(1, "Luckenbach Texas", 69)),
                 #(2, Song(2, "Allah's Plan", 420)),
@@ -122,7 +121,6 @@ class SongSearchVC(tk.Frame):
             d = data[i]
             md = d[1]  # MusicData
             self.searchView.insert("",'end',iid=i, values=(md.ID, md.title, md.duration, md.__class__.__name__))
-        print(data)
 
 
     def back_action(self):
