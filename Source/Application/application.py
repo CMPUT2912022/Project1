@@ -236,8 +236,23 @@ class Application:
         return data
 
 
-    def getPlaylistDetails(self, pid: int) -> Playlist:
-        pass
+    def getPlaylistDetails(self, pid: int) -> PlaylistDetails:
+        csr = self.conn.cursor()
+        p_details = csr.execute("SELECT pid, title FROM playlists WHERE pid = ?", (pid,)).fetchone()
+
+        s_query = csr.execute("""
+        SELECT s.sid, s.title, s.duration FROM songs s 
+        JOIN plinclude pi ON pi.sid = s.sid
+        WHERE pi.pid = ?;
+                              """, (pid,)).fetchall()
+        songs = []  # [Song]
+        for row in s_query:
+            songs.append(Song(row[0], row[1], row[2]))
+        return PlaylistDetails(pid, p_details[1], songs)
+
+
+
+
     def searchPlaylist(self, pid: int) -> List[Song]:
         pass
 
@@ -249,7 +264,7 @@ class Application:
         addSong function lets artists add new songs to db. 
         returns None if song is already in db otherwise returns Song
         ''' 
-        csr = conn.cursor()
+        csr = self.conn.cursor()
         max_sid = csr.execute("SELECT MAX(sid) FROM songs").fetchone()[0]
         query = csr.execute(""" 
         SELECT * 

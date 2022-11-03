@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from Application.application import *
 from Application.dataObjects import *
+from Interface.songVC import *
 from math import *
 
 class playlistVC(tk.Frame):
@@ -15,6 +16,9 @@ class playlistVC(tk.Frame):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
 
+        self.current_index = 0
+        self.max_index = 0
+        self.limit = 5
 
         self.search = tk.StringVar()
         self.searchView = None
@@ -60,12 +64,16 @@ class playlistVC(tk.Frame):
         #WITH THE PLAYLIST ID OF SELF.ITEMID
         #format should be as below
 
-        
-        #data = self.app.searchSongAndPlaylists()
-        #for i in range(current_page, current_page + self.limit):
-            #if i >= len(data):
-            #    break
-            #d = data[i]
-            #md = d[1]  # MusicData
-            #self.searchView.insert("",'end',iid=i, values=(md.ID, md.title, md.duration))
+        playlistDetails = self.app.getPlaylistDetails(self.itemID)
+        data = playlistDetails.songs
+
+        self.max_index = trunc(len(data)/self.limit)
+        if len(data)%self.limit == 0:
+            self.max_index -=1;
+        current_page = self.current_index*self.limit
+        for i in range(current_page, current_page + self.limit):
+            if i >= len(data):
+                break
+            s = data[i]  # MusicData
+            self.searchView.insert("",'end',iid=i, values=(s.ID, s.title, s.duration))
 
