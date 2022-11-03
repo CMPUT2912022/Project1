@@ -17,6 +17,9 @@ class artistInfoVC(tk.Frame):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
 
+        self.current_index = 0
+        self.max_index = 0
+        self.limit = 5
 
         self.search = tk.StringVar()
         self.searchView = None
@@ -58,19 +61,21 @@ class artistInfoVC(tk.Frame):
    
     def fill_table(self):
         self.clear_all()
-        data = [(1,Song(1, "Luckenbach Texas", 69))]
-        md = data[0][1]
-        self.searchView.insert("",'end',iid=0, values=(md.ID, md.title, md.duration))
+        #data = [(1,Song(1, "Luckenbach Texas", 69))]
         #CODE FOR FILLING THE TABLE WITH EVERY SONG THAT THE ARTIST HAS
         #WITH THE THE ARTIST NAME OF SELF.ARTISTNAME
         #format should be as below
 
+        artistDetails= self.app.getArtistDetails(self.artistName)
         
-        #data = self.app.searchSongAndPlaylists()
-        #for i in range(current_page, current_page + self.limit):
-            #if i >= len(data):
-            #    break
-            #d = data[i]
-            #md = d[1]  # MusicData
-            #self.searchView.insert("",'end',iid=i, values=(md.ID, md.title, md.duration))
+        data = artistDetails.songs
+        self.max_index = trunc(len(data)/self.limit)
+        if len(data)%self.limit == 0:
+            self.max_index -=1;
+        current_page = self.current_index*self.limit
+        for i in range(current_page, current_page + self.limit):
+            if i >= len(data):
+                break
+            s = data[i]
+            self.searchView.insert("",'end',iid=i, values=(s.ID, s.title, s.duration))
 

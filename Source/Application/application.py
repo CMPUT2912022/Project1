@@ -260,18 +260,23 @@ class Application:
 
     def getArtistDetails(self, aid: str) -> ArtistDetails:
         csr = self.conn.cursor()
+        
+        a_result = csr.execute("""
+        SELECT a.aid, a.name, a.nationality FROM artists a
+        WHERE a.aid = ?;""", (aid, )).fetchone()
+
         query= """
-        SELECT s.title, s.duration
-        FROM perform p JOIN songs s ON p.sid=a.sid 
-        WHERE p.aid={selected_aid};
+        SELECT s.sid, s.title, s.duration
+        FROM perform p JOIN songs s ON p.sid=s.sid 
+        WHERE p.aid="{selected_aid}";
         """.format(selected_aid = aid)
 
-        result=csr.execute(query, aid).fetchall()
+        result=csr.execute(query).fetchall()
         songs=[]
         for row in result: 
-            songs.append(row[0],row[1])
+            songs.append(Song(row[0],row[1], row[2]))
 
-        return ArtistDetails(aid, songs)
+        return ArtistDetails(aid, a_result[1], songs)
 
 
     def addSong(self, title: str, duration: int, artists: List[str]) -> Song:
