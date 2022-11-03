@@ -25,6 +25,14 @@ class ArtistStats:
         self.top_songs = top_songs
         self.top_playlists = top_playlists
 
+class ArtistDetails: 
+    aid = None
+    title=[]
+    duration=[]
+    def __init__(self, aid, title, duration):
+        self.aid = aid
+        self.title = title
+        self.duration = duration
 class SongDetails:
     sid = None
     title = ""

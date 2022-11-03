@@ -156,7 +156,7 @@ class Application:
         SELECT a.aid, a.name 
         FROM artists a
         JOIN perform p ON p.aid = a.aid
-        WHERE p.sid = {s_sid};
+        WHERE p.sid = {s_sid}
         """.format(s_sid=sid)
        
         query3 = """
@@ -189,9 +189,11 @@ class Application:
 
     def addSongToPlaylist(self, pid: int, song: Song) -> None:
         csr=self.conn.cursor()
+        max_sorder=csr.execute("SELECT MAX(sorder) FROM plinclude WHERE pid=?;",(pid,)).fetchone()[0]
         csr.execute("""
-        INSERT INTO plinclude (sid)
-        VALUES (?)""", (sid,))
+        INSERT INTO plinclude (pid,sid,sorder)
+        VALUES (?,?,?)
+        """, (pid,sid,max_sorder+1,pid))
         self.conn.commit()
 
 
@@ -256,8 +258,21 @@ class Application:
     def searchPlaylist(self, pid: int) -> List[Song]:
         pass
 
-    def getArtistDetails(self, aid: str) -> Artist:
-        pass
+    def getArtistDetails(self, aid: str) -> ArtistDetails:
+        csr = self.conn.cursor()
+        query= """
+        SELECT s.title, s.duration
+        FROM perform p JOIN songs s ON p.sid=a.sid 
+        WHERE p.aid={selected_aid};
+        """.format(selected_aid = aid)
+
+        result=csr.execute(query, aid).fetchall()
+        songs[]
+        for row in result: 
+            songs.append(row[0],row[1])
+
+        return ArtistDetails(aid, songs)
+
 
     def addSong(self, title: str, duration: int, artists: List[str]) -> Song:
         '''
