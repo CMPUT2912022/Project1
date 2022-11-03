@@ -9,11 +9,12 @@
 
 
 INSERT INTO users (uid, name, pwd) VALUES
-(1, "Jack", "pwd1"),
-(2, "Noah", "easypwd"),
-(3, "Nolan", "easierpwd"),
-(4, "Seth", "pwd2"),
-(5, "Andrew", "passwd");
+("JCK", "Jack", "pwd1"),
+("NOAH", "Noah", "easypwd"),
+("NOL", "Nolan", "easierpwd"),
+("SETH", "Seth", "pwd2"),
+("ADRW", "Andrew", "passwd"),
+("chm", "Connor", "pwd");
 
 
 INSERT INTO songs (sid, title, duration) VALUES
@@ -27,14 +28,15 @@ INSERT INTO songs (sid, title, duration) VALUES
 
 
 INSERT INTO artists (aid, name, nationality, pwd) VALUES
-(1, "Waylon Jennings", "American", "2212"),
-(2, "Buck Owens", "American", "14tw"),
-(3, "Merle Haggard", "American", "sfgagfsab"),
-(4, "The Strangers", "American", "gbhbhasbvhs"),
-(5, "Willie Nelson", "American", "gkvuabfhwdisgky"),
-(6, "Mickey Lamantia", "American", "823haf"),
-(7, "Hank Williams, Jr.", "american", "ndsjjdsjks"),
-(8, "Travis Scott", "American", "1111");
+("WAY", "Waylon Jennings", "American", "2212"),
+("BUCK", "Buck Owens", "American", "14tw"),
+("MERL", "Merle Haggard", "American", "sfgagfsab"),
+("STRA", "The Strangers", "American", "gbhbhasbvhs"),
+("WILY", "Willie Nelson", "American", "gkvuabfhwdisgky"),
+("MICK", "Mickey Lamantia", "American", "823haf"),
+("HANK", "Hank Williams, Jr.", "american", "ndsjjdsjks"),
+("TRVS", "Travis Scott", "American", "1111"),
+("chm", "Connor", "Canadian", "pwd");
 
 
 INSERT INTO perform (aid, sid) VALUES

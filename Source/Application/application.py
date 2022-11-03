@@ -307,12 +307,15 @@ class Application:
 
 
     def __init_database(self, dbName):
-        with open("Application/init_tables.sql", 'r') as fo:
+        #with open("Application/init_tables.sql", 'r') as fo:
+        with open("Application/prj-tables.sql", 'r') as fo:
             conn = sqlite3.connect(dbName)
             csr = conn.cursor()
             try:
-                csr.executescript(fo.read())
-                conn.commit()
+                query = csr.execute("SELECT 1 FROM sqlite_master WHERE type='table';").fetchone()
+                if query == None:
+                    csr.executescript(fo.read())
+                    conn.commit()
             except sqlite3.Error as e:
                 print("\nError while initializing database: \n", e)
 
