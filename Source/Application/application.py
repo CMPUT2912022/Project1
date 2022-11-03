@@ -8,13 +8,12 @@ import datetime  # [US.01.01]
 class Application:
     member: Member = None
     
-    dbName = "data.db"
     conn = None
     
 
-    def __init__(self):
-        self.__init_database("data.db")
-        self.conn = sqlite3.connect(self.dbName)
+    def __init__(self, db="data.db"):
+        self.__init_database(db)
+        self.conn = sqlite3.connect(db)
         return
 
 
