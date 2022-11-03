@@ -160,11 +160,11 @@ class Application:
         """.format(s_sid=sid)
        
         query3 = """
-        SELECT p1.title 
-        FROM playlists p1, plinclude p2
-        WHERE p2.sid = {s_sid}
-        AND p1.uid = "{current_uid}";
-        """.format(s_sid=sid, current_uid=self.member.mid)
+        SELECT p.title FROM playlists p
+        JOIN plinclude pi ON p.pid = pi.pid
+        WHERE pi.sid = {sid}
+        GROUP BY p.pid
+        """.format(sid=sid)
 
         result1=csr.execute(query1).fetchone()
         result2=csr.execute(query2).fetchall()
