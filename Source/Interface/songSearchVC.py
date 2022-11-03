@@ -88,7 +88,7 @@ class SongSearchVC(tk.Frame):
         if itemType == "Song":
             svc = songVC(self.app, self.parent,self.root, itemID)
         elif itemType == "Playlist":
-            pvc = playlistVC(self.app, self.parent,self.root, itemID)
+            pvc = playlistVC(self.app, self.parent, self.root, itemID)
 
 
 

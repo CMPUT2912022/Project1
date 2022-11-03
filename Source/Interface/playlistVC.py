@@ -5,7 +5,7 @@ from Application.dataObjects import *
 from math import *
 
 class playlistVC(tk.Frame):
-    def __init__(self, app, parent=None, itemID=0):
+    def __init__(self, app, parent=None, root=None, itemID=0):
         self.app = app
         self.parent = parent
         self.itemID = itemID
