@@ -154,21 +154,21 @@ class Application:
 
         query2 = """
         SELECT a.aid, a.name 
-        FROM artists a, perform p 
-        WHERE p.sid = {s_sid} 
-        AND a.aid=p.aid;
+        FROM artists a
+        JOIN perform p ON p.aid = a.aid
+        WHERE p.sid = {s_sid}
         """.format(s_sid=sid)
        
         query3 = """
         SELECT p1.title 
         FROM playlists p1, plinclude p2
-        WHERE p2.sid = s_sid
-        AND p1.uid = current_uid;
+        WHERE p2.sid = {s_sid}
+        AND p1.uid = "{current_uid}";
         """.format(s_sid=sid, current_uid=self.member.mid)
 
-        result1=csr.execute(query1, sid).fetchone()
-        result2=csr.execute(query2, sid).fetchall()
-        result3=csr.execute(query3, sid, self.member.mid).fetchall()
+        result1=csr.execute(query1).fetchone()
+        result2=csr.execute(query2).fetchall()
+        result3=csr.execute(query3).fetchall()
 
         title = result1[0]
         duration = result1[1]
@@ -238,8 +238,23 @@ class Application:
         return data
 
 
-    def getPlaylistDetails(self, pid: int) -> Playlist:
-        pass
+    def getPlaylistDetails(self, pid: int) -> PlaylistDetails:
+        csr = self.conn.cursor()
+        p_details = csr.execute("SELECT pid, title FROM playlists WHERE pid = ?", (pid,)).fetchone()
+
+        s_query = csr.execute("""
+        SELECT s.sid, s.title, s.duration FROM songs s 
+        JOIN plinclude pi ON pi.sid = s.sid
+        WHERE pi.pid = ?;
+                              """, (pid,)).fetchall()
+        songs = []  # [Song]
+        for row in s_query:
+            songs.append(Song(row[0], row[1], row[2]))
+        return PlaylistDetails(pid, p_details[1], songs)
+
+
+
+
     def searchPlaylist(self, pid: int) -> List[Song]:
         pass
 
@@ -264,7 +279,7 @@ class Application:
         addSong function lets artists add new songs to db. 
         returns None if song is already in db otherwise returns Song
         ''' 
-        csr = conn.cursor()
+        csr = self.conn.cursor()
         max_sid = csr.execute("SELECT MAX(sid) FROM songs").fetchone()[0]
         query = csr.execute(""" 
         SELECT * 
