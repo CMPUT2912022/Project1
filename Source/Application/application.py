@@ -267,7 +267,7 @@ class Application:
         """.format(selected_aid = aid)
 
         result=csr.execute(query, aid).fetchall()
-        songs[]
+        songs=[]
         for row in result: 
             songs.append(row[0],row[1])
 
