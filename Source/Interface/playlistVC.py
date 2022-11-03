@@ -10,6 +10,7 @@ class playlistVC(tk.Frame):
         self.app = app
         self.parent = parent
         self.itemID = itemID
+        self.root = root
 
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -46,7 +47,7 @@ class playlistVC(tk.Frame):
     def openSelectedItem(self, a):
         selectedItem = self.searchView.selection()[0]
         itemID = self.searchView.item(selectedItem)['values'][0]
-        svc = songVC(self.app, self.parent, itemID)
+        svc = songVC(self.app, self.parent, self.root, itemID)
         self.destroy()
 
 

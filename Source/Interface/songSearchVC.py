@@ -86,7 +86,7 @@ class SongSearchVC(tk.Frame):
         itemType = self.searchView.item(selectedItem)['values'][3]
         itemID = self.searchView.item(selectedItem)['values'][0]
         if itemType == "Song":
-            svc = songVC(self.app, self.parent, itemID)
+            svc = songVC(self.app, self.parent, self.root, itemID)
         elif itemType == "Playlist":
             pvc = playlistVC(self.app, self.parent, self.root, itemID)
 

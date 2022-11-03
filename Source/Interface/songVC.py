@@ -25,17 +25,17 @@ class songVC(tk.Frame):
         desc1_label = tk.Label(self, text= f"Song ID: {self.itemID}", font=(20))
         desc1_label.grid(column=0, row=0, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
         #artist name
-        desc2_label = tk.Label(self, text= "", font=(20))
-        desc2_label.grid(column=0, row=1, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+        self.desc2_label = tk.Label(self, text= "", font=(20))
+        self.desc2_label.grid(column=0, row=1, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
         #song title
-        desc4_label = tk.Label(self, text= "", font=(20))
-        desc4_label.grid(column=0, row=2, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+        self.desc4_label = tk.Label(self, text= "", font=(20))
+        self.desc4_label.grid(column=0, row=2, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
         #song duration
-        desc5_label = tk.Label(self, text= "", font=(20))
-        desc5_label.grid(column=0, row=3, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+        self.desc5_label = tk.Label(self, text= "", font=(20))
+        self.desc5_label.grid(column=0, row=3, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
         #list of playslists the song is in
-        desc6_label = tk.Label(self, text= "", font=(20))
-        desc6_label.grid(column=0, row=4, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
+        self.desc6_label = tk.Label(self, text= "", font=(20))
+        self.desc6_label.grid(column=0, row=4, columnspan=4, sticky=(tk.N, tk.W, tk.E, tk.S))
 
         search_button = tk.Button(self, text='Play', command=self.listen_action)
         search_button.grid(column=0, row=5, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -68,7 +68,10 @@ class songVC(tk.Frame):
 
         sd = self.app.getSongDetails(self.itemID)  # Returns SongDetails(sid, title, duration, artists, playlist_names)
         #TODO
-        desc2_label.config(text= f"Artist Name: {sd.artists[1].name}")
+        self.desc2_label.config(text= f"Artist Name: {sd.artists[0].name}")
+        self.desc4_label.config(text= f"Song Title: {sd.title}")
+        self.desc5_label.config(text= f"Song Duration: {sd.duration}")
+        self.desc6_label.config(text= f"In Playlists: {sd.playlist_names}")
         print(sd.sid, sd.title, sd.duration, sd.artists, sd.playlist_names)
 
 
