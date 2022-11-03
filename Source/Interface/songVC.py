@@ -5,7 +5,7 @@ from Application.dataObjects import *
 from math import *
 
 class songVC(tk.Frame):
-    def __init__(self, app, parent=None, itemID = 0):
+    def __init__(self, app, parent=None, root=None, itemID = 0):
         self.app = app
         self.parent = parent
         self.itemID = itemID
@@ -68,7 +68,7 @@ class songVC(tk.Frame):
 
         sd = self.app.getSongDetails(self.itemID)  # Returns SongDetails(sid, title, duration, artists, playlist_names)
         #TODO
-        print(sd)
+        desc2_label.config(text= f"Artist Name: {sd.artists[1].name}")
         print(sd.sid, sd.title, sd.duration, sd.artists, sd.playlist_names)
 
 
