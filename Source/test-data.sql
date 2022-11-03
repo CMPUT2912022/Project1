@@ -40,14 +40,14 @@ INSERT INTO artists (aid, name, nationality, pwd) VALUES
 
 
 INSERT INTO perform (aid, sid) VALUES
-(1,0),
-(2,1),
-(3,2),
-(4,2),
-(5,3),
-(6,4),
-(7,5),
-(8,6);
+("WAY",0),
+("BUCK",1),
+("MERL",2),
+("STRA",2),
+("WILY",3),
+("MICK",4),
+("HANK",5),
+("TRVS",6);
 
 
 INSERT INTO playlists (pid, title, uid) VALUES

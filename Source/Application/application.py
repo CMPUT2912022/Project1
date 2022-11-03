@@ -156,15 +156,15 @@ class Application:
         SELECT a.aid, a.name 
         FROM artists a
         JOIN perform p ON p.aid = a.aid
-        WHERE p.sid = {s_sid};
+        WHERE p.sid = {s_sid}
         """.format(s_sid=sid)
        
         query3 = """
-        SELECT p1.title 
-        FROM playlists p1, plinclude p2
-        WHERE p2.sid = {s_sid}
-        AND p1.uid = "{current_uid}";
-        """.format(s_sid=sid, current_uid=self.member.mid)
+        SELECT p.title FROM playlists p
+        JOIN plinclude pi ON p.pid = pi.pid
+        WHERE pi.sid = {sid}
+        GROUP BY p.pid
+        """.format(sid=sid)
 
         result1=csr.execute(query1).fetchone()
         result2=csr.execute(query2).fetchall()
@@ -189,9 +189,11 @@ class Application:
 
     def addSongToPlaylist(self, pid: int, song: Song) -> None:
         csr=self.conn.cursor()
+        max_sorder=csr.execute("SELECT MAX(sorder) FROM plinclude WHERE pid=?;",(pid,)).fetchone()[0]
         csr.execute("""
-        INSERT INTO plinclude (sid)
-        VALUES (?)""", (sid,))
+        INSERT INTO plinclude (pid,sid,sorder)
+        VALUES (?,?,?)
+        """, (pid,sid,max_sorder+1,pid))
         self.conn.commit()
 
 
@@ -256,8 +258,21 @@ class Application:
     def searchPlaylist(self, pid: int) -> List[Song]:
         pass
 
-    def getArtistDetails(self, aid: str) -> Artist:
-        pass
+    def getArtistDetails(self, aid: str) -> ArtistDetails:
+        csr = self.conn.cursor()
+        query= """
+        SELECT s.title, s.duration
+        FROM perform p JOIN songs s ON p.sid=a.sid 
+        WHERE p.aid={selected_aid};
+        """.format(selected_aid = aid)
+
+        result=csr.execute(query, aid).fetchall()
+        songs=[]
+        for row in result: 
+            songs.append(row[0],row[1])
+
+        return ArtistDetails(aid, songs)
+
 
     def addSong(self, title: str, duration: int, artists: List[str]) -> Song:
         '''
