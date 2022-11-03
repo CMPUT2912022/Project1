@@ -101,16 +101,7 @@ class SongSearchVC(tk.Frame):
         #terms = [t.strip() for t in self.search.get().split(',')]  # Old search pattern, splitting on commas
         terms = self.search.get().split()
 
-
-        #data = [(1,Song(1, "Luckenbach Texas", 69)),
-                #(2, Song(2, "Allah's Plan", 420)),
-                #(3, Playlist(3, "My Cool Playlist", 69420)),
-                #(4,Song(4, "Luckenbach Texas", 69)),
-               # (5, Song(5, "Allah's Plan", 420)),
-               # (6, Playlist(6, "My Cool Playlist", 69420))]  # Test data
-
         data = self.app.searchSongAndPlaylists(terms)
-        
 
         self.max_index = trunc(len(data)/self.limit)
         if len(data)%self.limit == 0:

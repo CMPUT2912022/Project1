@@ -27,7 +27,7 @@ class playlistVC(tk.Frame):
 
     def create_view(self):
         self.searchView = ttk.Treeview(self, columns=('id', 'Title', 'Duration'))
-        self.searchView.heading('id', text='ID')
+        self.searchView.heading('id', text='id')
         self.searchView.heading('Title', text='Title')
         self.searchView.heading('Duration', text='Duration')
         self.searchView['show'] = 'headings'  # Remove empty first column
@@ -74,6 +74,6 @@ class playlistVC(tk.Frame):
         for i in range(current_page, current_page + self.limit):
             if i >= len(data):
                 break
-            s = data[i]  # MusicData
+            s = data[i]  # Song
             self.searchView.insert("",'end',iid=i, values=(s.ID, s.title, s.duration))
 

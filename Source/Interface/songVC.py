@@ -5,11 +5,10 @@ from Application.dataObjects import *
 from math import *
 
 class songVC(tk.Frame):
-    def __init__(self, app, parent=None, root = None, itemID = 0):
+    def __init__(self, app, parent=None, itemID = 0):
         self.app = app
         self.parent = parent
         self.itemID = itemID
-        self.root = root
         self.mid = tk.StringVar()
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))

@@ -156,7 +156,7 @@ class Application:
         SELECT a.aid, a.name 
         FROM artists a
         JOIN perform p ON p.aid = a.aid
-        WHERE p.sid = {s_sid} 
+        WHERE p.sid = {s_sid};
         """.format(s_sid=sid)
        
         query3 = """
