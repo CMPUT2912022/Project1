@@ -144,19 +144,45 @@ class Application:
             self.conn.commit()
         return
 
-    def getSongDetails(self, sid: int) -> Song:
+    def getSongDetails(self, sid: int) -> SongDetails:
         csr = self.conn.cursor()
-        query = csr.execute("""
-        SELECT a.name, a.aid, s.title, s.duration, pi.title 
-        FROM artist a JOIN perform p ON a.aid = p.aid 
-        JOIN (SELECT p1.title, p2.sid 
-            FROM playlist p1, plinclude p2
-            WHERE p2.sid = ?) AS playlist_inclusive pi ON pi.sid = p.sid)
-        WHERE 
-        s.sid = ?;
-        """, (sid, sid)).fetchone()
-        #TODO: Return song
-	
+        query1 = """
+        SELECT title, duration
+        FROM songs
+        WHERE sid = {s_sid}
+        """.format(s_sid=sid)
+
+        query2 = """
+        SELECT a.aid, a.name 
+        FROM artists a, perform p 
+        WHERE p.sid = {s_sid} 
+        AND a.aid=p.aid
+        """.format(s_sid=sid)
+       
+        query3 = """
+        SELECT p1.title 
+        FROM playlists p1, plinclude p2
+        WHERE p2.sid = s_sid
+        AND p1.uid = current_uid
+        """.format(s_sid=sid, current_uid=self.member.mid)
+
+        result1=csr.execute(query1, sid).fetchone()
+        result2=csr.execute(query2, sid).fetchall()
+        result3=csr.execute(query3, sid, self.member.mid).fetchall()
+
+        title = result1[0]
+        duration = result1[1]
+        
+        artists = []
+        for row in result2:
+            artists.append(Artist(row[0],row[1]))
+
+        playlist_names = []
+        for row in result3:
+            playlist_names.append(row[0])
+
+        return SongDetails(sid, title, duration, artists, playlist_names)
+
 	
     def listenToSong(self, sid: int) -> None:
         pass
