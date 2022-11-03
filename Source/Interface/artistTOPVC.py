@@ -70,13 +70,9 @@ class artistStatsVC(tk.Frame):
     def fill_table(self):
         self.clear_all()
         #CODE FOR FILLING BOTH TABLES WITH THE TOP 3 USERS AND THE TOP 3 PLAYLISTS
+        a_stats = self.app.getArtistStats(self.app.member.mid)
+        for s in a_stats.top_songs:
+            self.searchView.insert("",'end',iid=i, values=(s.ID, s.title, s.duration))
 
-        
-        #data = self.app.searchSongAndPlaylists()
-        #for i in range(current_page, current_page + self.limit):
-            #if i >= len(data):
-            #    break
-            #d = data[i]
-            #md = d[1]  # MusicData
-            #self.searchView.insert("",'end',iid=i, values=(md.ID, md.title, md.duration))
-
+        for p in a_stats.top_playlists:
+            self.searchView1.insert("",'end',iid=i, values=(p.ID, p.title, p.duration))

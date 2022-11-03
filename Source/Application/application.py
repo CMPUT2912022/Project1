@@ -326,18 +326,19 @@ class Application:
             JOIN perform p ON l.sid = p.sid
             WHERE p.aid = ?
             GROUP BY p.aid
-            SORT BY sum(l.cnt)
+            ORDER BY SUM(l.cnt) DESC
             LIMIT 3;
             """, (aid,))
 
 
         # Top 3 playlists that include the largest number of their songs
-        top_playlists_query = csr.execute("""SELECT p.pid, p.title, SUM(), COUNT(pinc.sid) FROM playlists p
+        top_playlists_query = csr.execute("""SELECT p.pid, p.title, SUM(s.duration), COUNT(pinc.sid) FROM playlists p
             JOIN plinclude pinc ON p.pid = pinc.pid
-            JOIN perform perf ON p.sid = perf.sid
-            WHERE a.aid = ?
-            GROUP BY p.pid, a.aid
-            SORT BY COUNT(pinc.sid)
+            JOIN perform perf ON pinc.sid = perf.sid
+            JOIN songs s ON perf.sid = s.sid
+            WHERE perf.aid = ?
+            GROUP BY p.pid, perf.aid
+            ORDER BY COUNT(pinc.sid) DESC
             LIMIT 3;""", (aid,))
 
 

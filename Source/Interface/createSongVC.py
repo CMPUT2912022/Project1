@@ -88,9 +88,11 @@ class CreateSongVC(tk.Frame):
         s = self.app.addSong(title, duration, artists)
         if s != None:
             # Success
+            pass
 
         else:
             # Failure
+            pass
 
 
 
