@@ -149,26 +149,26 @@ class Application:
         query1 = """
         SELECT title, duration
         FROM songs
-        WHERE sid = {s_sid}
+        WHERE sid = {s_sid};
         """.format(s_sid=sid)
 
         query2 = """
         SELECT a.aid, a.name 
-        FROM artists a, perform p 
+        FROM artists a
+        JOIN perform p ON p.aid = a.aid
         WHERE p.sid = {s_sid} 
-        AND a.aid=p.aid
         """.format(s_sid=sid)
        
         query3 = """
         SELECT p1.title 
         FROM playlists p1, plinclude p2
-        WHERE p2.sid = s_sid
-        AND p1.uid = current_uid
+        WHERE p2.sid = {s_sid}
+        AND p1.uid = "{current_uid}";
         """.format(s_sid=sid, current_uid=self.member.mid)
 
-        result1=csr.execute(query1, sid).fetchone()
-        result2=csr.execute(query2, sid).fetchall()
-        result3=csr.execute(query3, sid, self.member.mid).fetchall()
+        result1=csr.execute(query1).fetchone()
+        result2=csr.execute(query2).fetchall()
+        result3=csr.execute(query3).fetchall()
 
         title = result1[0]
         duration = result1[1]

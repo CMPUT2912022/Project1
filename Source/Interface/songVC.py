@@ -66,7 +66,11 @@ class songVC(tk.Frame):
         pass
     def info_action(self):
         #CODE FOR GETTING A SONGS INFO GOES HERE, THEN IT JUST NEEDS TO BE ADDED TO THE LABELS
-        pass
+
+        sd = self.app.getSongDetails(self.itemID)  # Returns SongDetails(sid, title, duration, artists, playlist_names)
+        #TODO
+        print(sd)
+        print(sd.sid, sd.title, sd.duration, sd.artists, sd.playlist_names)
 
 
     def playlist_action(self):
