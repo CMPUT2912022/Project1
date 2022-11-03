@@ -47,7 +47,7 @@ class UserVC(tk.Frame):
         #self.grid_forget()
 
     def artist_search_action(self):
-        artistSearch = SongSearchVC(self.app, self.parent, self.root)
+        artistSearch = ArtistSearchVC(self.app, self.parent, self.root)
         artistSearch.grid()
 
     def logout_action(self):

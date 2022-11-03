@@ -39,6 +39,7 @@ class SongSearchVC(tk.Frame):
 
         search_entry = tk.Entry(self, width=5, textvariable=self.search)
         search_entry.grid(column=0, row=1, sticky=(tk.W, tk.E))
+        search_entry.focus()
 
         search_button = tk.Button(self, text='Search', command=self.search_action)
         search_button.grid(column=1, row=1)

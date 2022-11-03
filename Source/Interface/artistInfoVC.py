@@ -3,12 +3,13 @@ from tkinter import ttk
 from Application.application import *
 from Application.dataObjects import *
 from math import *
+from Interface.songVC import *
 
-class playlistVC(tk.Frame):
-    def __init__(self, app, parent=None, itemID=0):
+class artistInfoVC(tk.Frame):
+    def __init__(self, app, parent=None, root=None, artistName=0):
         self.app = app
         self.parent = parent
-        self.itemID = itemID
+        self.artistName = artistName
 
         tk.Frame.__init__(self, parent)
         self.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -56,8 +57,11 @@ class playlistVC(tk.Frame):
    
     def fill_table(self):
         self.clear_all()
-        #CODE FOR FILLING THE TABLE WITH EVERY SONG IN THE PLAYLIST
-        #WITH THE PLAYLIST ID OF SELF.ITEMID
+        data = [(1,Song(1, "Luckenbach Texas", 69))]
+        md = data[0][1]
+        self.searchView.insert("",'end',iid=0, values=(md.ID, md.title, md.duration))
+        #CODE FOR FILLING THE TABLE WITH EVERY SONG THAT THE ARTIST HAS
+        #WITH THE THE ARTIST NAME OF SELF.ARTISTNAME
         #format should be as below
 
         
