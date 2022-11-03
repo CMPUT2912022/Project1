@@ -31,9 +31,9 @@ class SongDetails:
     duration = None
     artist_names = []  # [string]
     playlist_names = []  # [string]
-    def __init__(self, sid, title, duration, artist_names, playlist_names):
+    def __init__(self, sid, title, duration, artists, playlist_names):
         self.sid = sid
         self.title = title
         self.duration = duration
-        self.artist_names = artist_names
+        self.artists = artists
         self.playlist_names = playlist_names
