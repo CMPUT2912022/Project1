@@ -7,6 +7,11 @@ Enterprise Database
 cd Source
 python3 main.py
 ```
+Or with db option
+```bash
+cd Source
+python3 main.py database.db
+```
 
 ## UI
 ![UI_Flowchart](https://github.com/CMPUT2912022/Project1/blob/main/Documentation/UI_Flowchart.svg)
