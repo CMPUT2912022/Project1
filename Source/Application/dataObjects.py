@@ -29,7 +29,7 @@ class SongDetails:
     sid = None
     title = ""
     duration = None
-    artist_names = []  # [string]
+    artists = []  # [Artist]
     playlist_names = []  # [string]
     def __init__(self, sid, title, duration, artist_names, playlist_names):
         self.sid = sid
