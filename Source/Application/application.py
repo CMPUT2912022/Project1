@@ -297,8 +297,21 @@ class Application:
     def addSong(self, title: str, duration: int) -> None:
         pass
 
-    def searchArtists(self, search: str) -> List[Artist]:
-        pass
+    def searchArtists(self, terms: List[str]) -> List[Artist]:
+        data=[]
+        csr=self.conn.cursor()
+
+        where_clause = " OR name ".join(["LIKE '%' || ? || '%'" for i in terms])
+        query = """
+            SELECT a.name, a.nationality, COUNT(p.sid)
+            FROM artists a, perform p
+            WHERE a.name {where_clause};
+            """.format(where_clause = where_clause)
+            
+        results = csr.execute(query, tuple(terms)).fetchall()
+
+        for row in results:
+            data.append((1, Artists(row[0],row[1],row[2])))
 
 
     def __init_database(self, dbName):
